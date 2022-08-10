@@ -1,20 +1,20 @@
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { StatusBar } from 'react-native'
+import { Routes } from './src/routers'
+import { ThemeProvider } from 'styled-components'
+import { theme } from './src/styles'
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>oi mundo</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <ThemeProvider theme={theme}>
+        <StatusBar
+          translucent
+          backgroundColor={'#FFFFFF'}
+          barStyle="dark-content"
+        />
+        <Routes />
+      </ThemeProvider>
+    </NavigationContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
