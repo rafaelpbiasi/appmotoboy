@@ -93,13 +93,14 @@ export function Login({ navigation }) {
         NOME APP
       </Text>
       <CardImage
-        w="230"
-        mt="50"
+        w="200"
+        h="200"
+        mt="40"
         resizeMode="contain"
         source={require('../../../assets/images/logo.jpeg')}
       />
       <Input
-        mt="50"
+        mt="40"
         label="Login"
         keyboardType="email-address"
         placeholder="Digite seu login"
@@ -140,11 +141,11 @@ export function Login({ navigation }) {
         </GenericButton>
       </Row>
       <Row mt="60" mb="20" wp="90" justify="space-between">
-        <Button wp="48" onPress={handleNavigateHome}>
-          Entrar
-        </Button>
         <Button wp="48" onPress={handleNavigateRegister}>
           Cadastrar-se
+        </Button>
+        <Button wp="48" onPress={handleNavigateHome}>
+          Entrar
         </Button>
       </Row>
     </ScreenScrollContainer>
