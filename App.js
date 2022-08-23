@@ -3,6 +3,7 @@ import { StatusBar } from 'react-native'
 import { Routes } from './src/routers'
 import { ThemeProvider } from 'styled-components'
 import { theme } from './src/styles'
+import Toast from 'react-native-toast-message'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           barStyle="dark-content"
         />
         <Routes />
+        <Toast />
       </ThemeProvider>
     </NavigationContainer>
   )

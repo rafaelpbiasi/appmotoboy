@@ -5,7 +5,8 @@ export const InputContainer = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: ${({ w, wp, theme }) =>
+    w ? `${theme.metrics.px(w)}px` : wp ? `${wp}%` : '100%'};
   margin-top: ${({ theme, mt }) => theme.metrics.px(mt || 0)}px;
   margin-bottom: ${({ theme, mb }) => theme.metrics.px(mb || 0)}px;
   margin-left: ${({ theme, ml }) => theme.metrics.px(ml || 0)}px;
@@ -13,7 +14,8 @@ export const InputContainer = styled.View`
 `
 
 export const ContainerInput = styled.View`
-  width: 90%;
+  width: ${({ w, wp, theme }) =>
+    w ? `${theme.metrics.px(w)}px` : wp ? `${wp}%` : '90%'};
 `
 
 export const InputText = styled.TextInput.attrs({

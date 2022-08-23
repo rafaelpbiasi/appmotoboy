@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { Row, Text, ScreenScrollContainer } from '../../components/atoms'
 import { Button, Input } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
+import Toast from 'react-native-toast-message'
 
 export function NewPassword({ navigation }) {
-  const [senha, setsenha] = useState('')
-  const [confirmaSenha, setconfirmaSenha] = useState('')
+  const [senha, setSenha] = useState('')
+  const [confirmaSenha, setConfirmaSenha] = useState('')
   const [errors, setErrors] = useState({
     senha: '',
   })
@@ -47,8 +48,10 @@ export function NewPassword({ navigation }) {
         return {
           ...prevState,
           confirmaSenha: validadePasswordEquals,
+          senha: validadePasswordEquals,
         }
       })
+      valid = false
     }
 
     return valid
@@ -63,6 +66,11 @@ export function NewPassword({ navigation }) {
 
   function handleNavigateAlterarSenha() {
     if (validate()) {
+      Toast.show({
+        type: 'info',
+        text1: 'Senhas alteradas com sucesso',
+        visibilityTime: 6000,
+      })
       navigation.reset({
         routes: [{ name: 'Login' }],
       })
@@ -71,7 +79,7 @@ export function NewPassword({ navigation }) {
 
   function handleNavigateCancelar() {
     navigation.reset({
-      routes: [{ name: 'NewPassword' }],
+      routes: [{ name: 'Login' }],
     })
   }
 
@@ -93,7 +101,7 @@ export function NewPassword({ navigation }) {
         value={senha}
         onChangeText={(text) => {
           resetErrors()
-          setsenha(text)
+          setSenha(text)
         }}
         messageError={errors.senha}
         returnKeyType={'go'}
@@ -108,7 +116,7 @@ export function NewPassword({ navigation }) {
         value={confirmaSenha}
         onChangeText={(text) => {
           resetErrors()
-          setconfirmaSenha(text)
+          setConfirmaSenha(text)
         }}
         messageError={errors.confirmaSenha}
         returnKeyType={'go'}

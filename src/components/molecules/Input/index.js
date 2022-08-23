@@ -6,10 +6,30 @@ import { TextErrors } from '../TextErrors'
 export const Input = (props) => {
   const [focus, setFocus] = useState()
 
-  const { label, placeholder, mt, mb, ml, mr, innerRef, messageError } = props
+  const {
+    label,
+    placeholder,
+    mt,
+    mb,
+    ml,
+    mr,
+    innerRef,
+    messageError,
+    wContainer,
+    wpContainer,
+    w,
+    wp,
+  } = props
   return (
-    <InputContainer mt={mt} mb={mb} ml={ml} mr={mr}>
-      <ContainerInput>
+    <InputContainer
+      w={wContainer}
+      wp={wpContainer}
+      mt={mt}
+      mb={mb}
+      ml={ml}
+      mr={mr}
+    >
+      <ContainerInput wp={wp} w={w}>
         <Row>
           <Text align="left" size="20" ml="10" weight="500">
             {label}
