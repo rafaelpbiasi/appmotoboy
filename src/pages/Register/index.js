@@ -5,6 +5,8 @@ import { Button, Input, RadioButton } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 import { Camera, Gallery, MEDIA } from '../../utils/media'
 import Toast from 'react-native-toast-message'
+import { TextInputMask } from 'react-native-masked-text'
+import { GenericButton } from '../../components/molecules/Button/styles'
 
 const tipos = {
   MOTOBOY: 'motoboy',
@@ -135,6 +137,10 @@ export function Register({ navigation }) {
       confirmaSenha: '',
       Cpf: '',
     })
+  }
+
+  function handleNavigateConfirmaTermos() {
+    navigation.navigate('ConfirmTerms')
   }
 
   function handleNavigateCadastro() {
@@ -325,7 +331,6 @@ export function Register({ navigation }) {
         }}
         messageError={errors.Email}
         returnKeyType={'go'}
-        onSubmitEditing={handleNavigateCadastro}
       />
       <Input
         label="Senha"
@@ -337,7 +342,6 @@ export function Register({ navigation }) {
         }}
         messageError={errors.Senha}
         returnKeyType={'go'}
-        onSubmitEditing={handleNavigateCadastro}
       />
       <Input
         label="Confirme a senha"
@@ -349,7 +353,6 @@ export function Register({ navigation }) {
         }}
         messageError={errors.ConfirmaSenha}
         returnKeyType={'go'}
-        onSubmitEditing={handleNavigateCadastro}
       />
 
       <Input
@@ -362,7 +365,6 @@ export function Register({ navigation }) {
         }}
         messageError={errors.Cpf}
         returnKeyType={'go'}
-        onSubmitEditing={handleNavigateCadastro}
       />
 
       <Row wp="90" mt="10">
@@ -392,10 +394,15 @@ export function Register({ navigation }) {
           setChecked={(isChecked) => {
             setTermos(isChecked)
           }}
-          title="Confirma os termos de uso?"
           disableBuiltInState={false}
         />
+        <GenericButton onPress={handleNavigateConfirmaTermos}>
+          <Text size="20" weight="500">
+            Confirma os termos de uso?
+          </Text>
+        </GenericButton>
       </Row>
+
       <Button mt="20" wp="48" onPress={handleNavigateCadastro}>
         Cadastrar-se
       </Button>

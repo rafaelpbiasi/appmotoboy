@@ -67,10 +67,10 @@ export function Login({ navigation }) {
     })
   }
 
-  function handleNavigateHome() {
+  function handleNavigateSearchDelivery() {
     if (validate()) {
       navigation.reset({
-        routes: [{ name: 'Home' }],
+        routes: [{ name: 'SearchMotoboy' }],
       })
     }
   }
@@ -131,7 +131,7 @@ export function Login({ navigation }) {
           setNext(input)
         }}
         returnKeyType={'go'}
-        onSubmitEditing={handleNavigateHome}
+        onSubmitEditing={handleNavigateSearchDelivery}
       />
       <Row wp="85" mt="8">
         <GenericButton onPress={handleNavigateRecoverPassword}>
@@ -144,7 +144,7 @@ export function Login({ navigation }) {
         <Button wp="48" onPress={handleNavigateRegister}>
           Cadastrar-se
         </Button>
-        <Button wp="48" onPress={handleNavigateHome}>
+        <Button wp="48" onPress={handleNavigateSearchDelivery}>
           Entrar
         </Button>
       </Row>

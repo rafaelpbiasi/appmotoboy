@@ -14,6 +14,7 @@ function EmailValidator(value) {
 
   return null
 }
+
 function SenhaValidator(value1, value2) {
   if (value1 != value2) {
     return 'As senhas precisam ser iguais'

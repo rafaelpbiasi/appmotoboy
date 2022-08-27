@@ -11,7 +11,7 @@ export const RadioButton = ({
   return (
     <BouncyCheckbox
       size={25}
-      fillColor="greenDark"
+      fillColor="green"
       unfillColor="#FFFFFF"
       useNativeDriver
       text={title}
@@ -24,7 +24,7 @@ export const RadioButton = ({
       isChecked={checked}
       innerIconStyle={{
         borderWidth: 2,
-        borderColor: checked ? 'greenDark' : colors.green,
+        borderColor: checked ? 'green' : colors.green,
       }}
       disableBuiltInState={disableBuiltInState}
       onPress={(isChecked) => {

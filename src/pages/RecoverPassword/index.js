@@ -1,10 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Container,
-  Row,
-  Text,
-  ScreenScrollContainer,
-} from '../../components/atoms'
+import { Text, ScreenScrollContainer } from '../../components/atoms'
 import { Button, Input } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 
