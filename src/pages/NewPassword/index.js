@@ -68,7 +68,7 @@ export function NewPassword({ navigation }) {
     if (validate()) {
       Toast.show({
         type: 'info',
-        text1: 'Senhas alteradas com sucesso',
+        text1: 'Senha alterada com sucesso',
         visibilityTime: 6000,
       })
       navigation.reset({

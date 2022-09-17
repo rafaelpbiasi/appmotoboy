@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
-import { Button, Input } from '../../components/molecules'
+import { Button, Input, RadioButton } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 
 export function RegisterDelivery({ navigation }) {
+  const veiculos = {
+    MOTO: 'moto',
+    CARRO: 'carro',
+    AMBOS: 'ambos',
+  }
+
   const [errors, setErrors] = useState({
     RuaOrigem: '',
   })
   const [RuaOrigem, setRuaOrigem] = useState('')
   const [NumeroOrigem, setNumeroOrigem] = useState('')
   const [BairroOrigem, setBairroOrigem] = useState('')
+  const [ReferenciaOrigem, setReferenciaOrigem] = useState('')
   const [RuaDestino, setRuaDestino] = useState('')
   const [NumeroDestino, setNumeroDestino] = useState('')
   const [BairroDestino, setBairroDestino] = useState('')
+  const [ReferenciaDestino, setReferenciaDestino] = useState('')
+  const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
   const [Valor, setValor] = useState('')
 
   function validate() {
@@ -152,7 +161,17 @@ export function RegisterDelivery({ navigation }) {
         returnKeyType={'next'}
         blurOnSubmit={false}
       />
-
+      <Input
+        label="Referência Origem"
+        value={ReferenciaOrigem}
+        onChangeText={(text) => {
+          resetErrors()
+          setReferenciaOrigem(text)
+        }}
+        messageError={errors.ReferenciaOrigem}
+        returnKeyType={'next'}
+        blurOnSubmit={false}
+      />
       <Row wp="90" justify="space-between">
         <Input
           label="Rua Destino"
@@ -193,6 +212,47 @@ export function RegisterDelivery({ navigation }) {
         blurOnSubmit={false}
       />
       <Input
+        label="Referência Destino"
+        value={ReferenciaDestino}
+        onChangeText={(text) => {
+          resetErrors()
+          setReferenciaDestino(text)
+        }}
+        messageError={errors.ReferenciaDestino}
+        returnKeyType={'next'}
+        blurOnSubmit={false}
+      />
+      <>
+        <Row wp="90" mt="10" mb="10">
+          <Row wp="30">
+            <RadioButton
+              checked={tipoVeiculo === veiculos.MOTO}
+              setChecked={() => {
+                setTipoVeiculo(veiculos.MOTO)
+              }}
+              title="Moto"
+            />
+          </Row>
+          <Row wp="40">
+            <RadioButton
+              checked={tipoVeiculo === veiculos.CARRO}
+              setChecked={() => {
+                setTipoVeiculo(veiculos.CARRO)
+              }}
+              ml={24}
+              title="Carro"
+            />
+          </Row>
+          <RadioButton
+            checked={tipoVeiculo === veiculos.AMBOS}
+            setChecked={() => {
+              setTipoVeiculo(veiculos.AMBOS)
+            }}
+            title="Ambos"
+          />
+        </Row>
+      </>
+      <Input
         label="Valor"
         keyboardType="numeric"
         value={Valor}
@@ -205,7 +265,7 @@ export function RegisterDelivery({ navigation }) {
         blurOnSubmit={false}
       />
 
-      <Button mt="10" wp="48" onPress={handleNavigateSearchDelivery}>
+      <Button mt="10" wp="48" mb="50" onPress={handleNavigateSearchDelivery}>
         Cadastrar entrega
       </Button>
     </ScreenScrollContainer>

@@ -7,6 +7,8 @@ export const ButtonContainer = styled.TouchableOpacity`
   justify-content: center;
   background-color: ${({ bg, theme }) => theme.colors[bg || 'greenDark']};
   border-radius: ${({ theme, border }) => theme.metrics.px(border || 28)}px;
+  border: 1px solid
+    ${({ borderColor, theme }) => theme.colors[borderColor || 'greenDark']};
   width: ${({ w, wp, theme }) =>
     w ? `${theme.metrics.px(w)}px` : wp ? `${wp}%` : '100%'};
   height: ${({ theme, h }) => theme.metrics.px(h || 56)}px;

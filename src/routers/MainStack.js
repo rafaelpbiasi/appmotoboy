@@ -14,6 +14,7 @@ import {
   Perfil,
   Relatorio,
 } from '../pages'
+import MainTabBottom from './MainTabBottom'
 
 export function MainRoutes() {
   const Stack = createNativeStackNavigator()
@@ -25,6 +26,7 @@ export function MainRoutes() {
       }}
     >
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="MainTabBottom" component={MainTabBottom} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
       <Stack.Screen name="Register" component={Register} />

@@ -70,7 +70,7 @@ export function Login({ navigation }) {
   function handleNavigateSearchDelivery() {
     if (validate()) {
       navigation.reset({
-        routes: [{ name: 'SearchMotoboy' }],
+        routes: [{ name: 'MainTabBottom' }],
       })
     }
   }
@@ -141,7 +141,12 @@ export function Login({ navigation }) {
         </GenericButton>
       </Row>
       <Row mt="60" mb="20" wp="90" justify="space-between">
-        <Button wp="48" onPress={handleNavigateRegister}>
+        <Button
+          wp="48"
+          bg="white"
+          color="greenDark"
+          onPress={handleNavigateRegister}
+        >
           Cadastrar-se
         </Button>
         <Button wp="48" onPress={handleNavigateSearchDelivery}>

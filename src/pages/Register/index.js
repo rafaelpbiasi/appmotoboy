@@ -145,8 +145,14 @@ export function Register({ navigation }) {
 
   function handleNavigateCadastro() {
     if (validate()) {
+      Toast.show({
+        type: 'info',
+        text1: 'Cadastro feito com sucesso',
+        visibilityTime: 6000,
+      })
+
       navigation.reset({
-        routes: [{ name: 'Home' }],
+        routes: [{ name: 'Login' }],
       })
     }
   }
@@ -229,6 +235,8 @@ export function Register({ navigation }) {
               onPress={async () => {
                 await handleGallery()
               }}
+              bg="white"
+              color="greenDark"
             >
               Galeria
             </Button>
@@ -403,7 +411,7 @@ export function Register({ navigation }) {
         </GenericButton>
       </Row>
 
-      <Button mt="20" wp="48" onPress={handleNavigateCadastro}>
+      <Button mt="20" wp="48" mb="50" onPress={handleNavigateCadastro}>
         Cadastrar-se
       </Button>
     </ScreenScrollContainer>

@@ -30,9 +30,64 @@ export function SearchDelivery({ navigation }) {
         Busca de Entregas
       </Text>
 
-      <Button mt="20" wp="48" onPress={handleNavigateSuasEntregas}>
-        Suas entregas
-      </Button>
+      <Row wp="90" mt="10" justify="space-between">
+        <Text size="20">Valor maior ou igual que R$</Text>
+      </Row>
+
+      <Card mt="30">
+        <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+          <Text size="20" mr="5">
+            Nome do contratante
+          </Text>
+
+          <Button wp="48" h="40" w="90">
+            Perfil
+          </Button>
+        </Row>
+
+        <Row
+          justify="space-between"
+          mt="10"
+          style={{ elevation: 10, zIndex: 10 }}
+        >
+          <Text size="20" mr="5">
+            Endereço origem:
+          </Text>
+        </Row>
+
+        <Row
+          justify="space-between"
+          mt="10"
+          style={{ elevation: 10, zIndex: 10 }}
+        >
+          <Text size="20" mr="5">
+            Endereço Destino:
+          </Text>
+        </Row>
+
+        <Row
+          justify="space-between"
+          mt="10"
+          style={{ elevation: 10, zIndex: 10 }}
+        >
+          <Text size="20" mr="5">
+            Valor:
+          </Text>
+        </Row>
+
+        <Row
+          justify="space-between"
+          mt="10"
+          style={{ elevation: 10, zIndex: 10 }}
+        >
+          <Button wp="48" mt="20" bg="greenLight" borderColor="greenLight">
+            Abrir GPS
+          </Button>
+          <Button wp="48" mt="20" bg="greenLight" borderColor="greenLight">
+            Aceitar
+          </Button>
+        </Row>
+      </Card>
     </ScreenScrollContainer>
   )
 }
