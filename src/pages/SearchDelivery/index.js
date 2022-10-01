@@ -20,6 +20,17 @@ export function SearchDelivery({ navigation }) {
     navigation.navigate('YourDelivery')
   }
 
+  function handleNavigateAceitarEntrega() {
+    if (validate()) {
+      Toast.show({
+        type: 'info',
+        text1:
+          'Entrega aceita com sucesso, você tem 30 minutos para buscar o produto e realizar a entrega',
+        visibilityTime: 6000,
+      })
+    }
+  }
+
   return (
     <ScreenScrollContainer
       contentContainerStyle={{
@@ -83,7 +94,13 @@ export function SearchDelivery({ navigation }) {
           <Button wp="48" mt="20" bg="greenLight" borderColor="greenLight">
             Abrir GPS
           </Button>
-          <Button wp="48" mt="20" bg="greenLight" borderColor="greenLight">
+          <Button
+            wp="48"
+            mt="20"
+            bg="greenLight"
+            borderColor="greenLight"
+            onPress={handleNavigateAceitarEntrega}
+          >
             Aceitar
           </Button>
         </Row>

@@ -24,6 +24,7 @@ export function RegisterDelivery({ navigation }) {
   const [ReferenciaDestino, setReferenciaDestino] = useState('')
   const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
   const [Valor, setValor] = useState('')
+  const [Item, setItem] = useState('')
 
   function validate() {
     var valid = true
@@ -261,6 +262,18 @@ export function RegisterDelivery({ navigation }) {
           setValor(text)
         }}
         messageError={errors.Valor}
+        returnKeyType={'next'}
+        blurOnSubmit={false}
+      />
+
+      <Input
+        label="Item"
+        value={Item}
+        onChangeText={(text) => {
+          resetErrors()
+          setItem(text)
+        }}
+        messageError={errors.Item}
         returnKeyType={'next'}
         blurOnSubmit={false}
       />
