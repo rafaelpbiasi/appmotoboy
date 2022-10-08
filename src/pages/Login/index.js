@@ -8,32 +8,35 @@ import {
 import { Button, Input } from '../../components/molecules'
 import { GenericButton } from '../../components/molecules/Button/styles'
 import { Validates } from '../../utils/validates'
+import Toast from 'react-native-toast-message'
+import { login } from '../../services/usuario'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function Login({ navigation }) {
-  const [login, setLogin] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [next, setNext] = useState('')
   const [errors, setErrors] = useState({
-    login: '',
+    email: '',
     password: '',
   })
 
   function validate() {
     var valid = true
     var dataErros = {
-      login: '',
+      email: '',
       password: '',
     }
 
-    const validateLogin = Validates.ValidateIsEmpty(login)
-    const validateLoginRegex = Validates.EmailValidator(login)
+    const validateLogin = Validates.ValidateIsEmpty(email)
+    const validateLoginRegex = Validates.EmailValidator(email)
     const validatePassword = Validates.ValidateIsEmpty(password)
 
     if (validateLogin) {
       setErrors((prevState) => {
         return {
           ...prevState,
-          login: validateLogin,
+          email: validateLogin,
         }
       })
       valid = false
@@ -41,7 +44,7 @@ export function Login({ navigation }) {
       setErrors((prevState) => {
         return {
           ...prevState,
-          login: validateLoginRegex,
+          email: validateLoginRegex,
         }
       })
       valid = false
@@ -63,15 +66,42 @@ export function Login({ navigation }) {
   function resetErrors() {
     setErrors({
       password: '',
-      login: '',
+      email: '',
     })
   }
 
-  function handleNavigateSearchDelivery() {
-    if (validate()) {
-      navigation.reset({
-        routes: [{ name: 'MainTabBottom' }],
+  async function handleNavigateSearchDelivery() {
+    try {
+      if (!validate()) return
+      const response = await login({
+        email: email,
+        senha: password,
       })
+
+      if (response.status === 200) {
+        await AsyncStorage.setItem(
+          'usuario',
+          JSON.stringify(response.data.usuario)
+        )
+        navigation.reset({
+          routes: [{ name: 'MainTabBottom' }],
+        })
+      }
+
+      if (response.status === 404) {
+        Toast.show({
+          type: 'error',
+          text1: 'Dados inválidos',
+          visibilityTime: 6000,
+        })
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro inesperado',
+        visibilityTime: 6000,
+      })
+      console.log(error)
     }
   }
 
@@ -104,12 +134,12 @@ export function Login({ navigation }) {
         label="Login"
         keyboardType="email-address"
         placeholder="Digite seu login"
-        value={login}
+        value={email}
         onChangeText={(text) => {
           resetErrors()
-          setLogin(text)
+          setEmail(text)
         }}
-        messageError={errors.login}
+        messageError={errors.email}
         returnKeyType={'next'}
         onSubmitEditing={() => {
           next.focus()

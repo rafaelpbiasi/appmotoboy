@@ -7,16 +7,17 @@ import { Camera, Gallery, MEDIA } from '../../utils/media'
 import Toast from 'react-native-toast-message'
 import { TextInputMask } from 'react-native-masked-text'
 import { GenericButton } from '../../components/molecules/Button/styles'
+import { cadastroUsuario } from '../../services/usuario'
 
 const tipos = {
-  MOTOBOY: 'motoboy',
-  CONTRANTE: 'contrante',
+  MOTOBOY: 'M',
+  CONTRANTE: 'C',
 }
 
 const veiculos = {
-  MOTO: 'moto',
-  CARRO: 'carro',
-  AMBOS: 'ambos',
+  MOTO: 'M',
+  CARRO: 'C',
+  AMBOS: 'A',
 }
 
 export function Register({ navigation }) {
@@ -143,7 +144,7 @@ export function Register({ navigation }) {
     navigation.navigate('ConfirmTerms')
   }
 
-  function handleNavigateCadastro() {
+  /*function handleNavigateCadastro() {
     if (validate()) {
       Toast.show({
         type: 'info',
@@ -154,6 +155,58 @@ export function Register({ navigation }) {
       navigation.reset({
         routes: [{ name: 'Login' }],
       })
+    }
+  }*/
+
+  async function handleNavigateCadastro() {
+    try {
+      if (!validate()) return
+
+      const data = new FormData()
+
+      data.append('nome', Nome)
+      data.append('telefone', Telefone)
+      data.append('email', Email)
+      data.append('senha', Senha)
+      data.append('cpfcnpj', Cpf)
+      data.append('flagtipousuario', tipoUsuario)
+      data.append('flagtipoveiculo', tipoVeiculo)
+      data.append('rua', Rua)
+      data.append('numero', Numero)
+      data.append('cep', Cep)
+      data.append('flagconfirmatermos', termos ? 'T' : 'F')
+      if (image) {
+        data.append('fotocnh', {
+          name: Nome,
+          type: 'image/jpg',
+          uri: image,
+        })
+      }
+
+      const response = await cadastroUsuario(data)
+
+      console.log(response.data)
+      if (response.status === 201) {
+        navigation.reset({
+          routes: [{ name: 'Login' }],
+        })
+      }
+
+      if (response.status === 400) {
+        console.log(response.data)
+        Toast.show({
+          type: 'info',
+          text1: 'Valide seus dados',
+          visibilityTime: 6000,
+        })
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro inesperado',
+        visibilityTime: 6000,
+      })
+      console.log(error)
     }
   }
 
