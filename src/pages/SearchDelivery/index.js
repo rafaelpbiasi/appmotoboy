@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
-import { Button, Input, RadioButton } from '../../components/molecules'
+import { Button, Card, Input, RadioButton } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 

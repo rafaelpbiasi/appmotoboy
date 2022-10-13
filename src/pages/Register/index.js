@@ -144,20 +144,6 @@ export function Register({ navigation }) {
     navigation.navigate('ConfirmTerms')
   }
 
-  /*function handleNavigateCadastro() {
-    if (validate()) {
-      Toast.show({
-        type: 'info',
-        text1: 'Cadastro feito com sucesso',
-        visibilityTime: 6000,
-      })
-
-      navigation.reset({
-        routes: [{ name: 'Login' }],
-      })
-    }
-  }*/
-
   async function handleNavigateCadastro() {
     try {
       if (!validate()) return

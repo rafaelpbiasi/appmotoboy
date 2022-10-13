@@ -13,8 +13,10 @@ import {
   ConfirmTerms,
   Perfil,
   Relatorio,
+  RegisterDeliveryMotoboy,
 } from '../pages'
 import MainTabBottom from './MainTabBottom'
+import MainTabBottomMotoboy from './MainTabBottomMotoboy'
 
 export function MainRoutes() {
   const Stack = createNativeStackNavigator()
@@ -27,6 +29,10 @@ export function MainRoutes() {
     >
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="MainTabBottom" component={MainTabBottom} />
+      <Stack.Screen
+        name="MainTabBottomMotoboy"
+        component={MainTabBottomMotoboy}
+      />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
       <Stack.Screen name="Register" component={Register} />
@@ -39,6 +45,10 @@ export function MainRoutes() {
       <Stack.Screen name="ConfirmTerms" component={ConfirmTerms} />
       <Stack.Screen name="Perfil" component={Perfil} />
       <Stack.Screen name="Relatorio" component={Relatorio} />
+      <Stack.Screen
+        name="RegisterDeliveryMotoboy"
+        component={RegisterDeliveryMotoboy}
+      />
     </Stack.Navigator>
   )
 }

@@ -1,27 +1,27 @@
 import React, { useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
-import { Button, Input, RadioButton } from '../../components/molecules'
-import { Validates } from '../../utils/validates'
-import Toast from 'react-native-toast-message'
+import { Button, Card, Input, RadioButton } from '../../components/molecules'
+import DropDownPicker from 'react-native-dropdown-picker'
+import { colors } from '../../styles/colors'
 
 export function YourDelivery({ navigation }) {
   const [errors, setErrors] = useState({
     Nome: '',
   })
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('todas')
+  const [value, setValue] = useState('T')
   const [items, setItems] = useState([
-    { label: 'Todas', value: 'todas' },
-    { label: 'Iniciada', value: 'iniciada' },
-    { label: 'Finalizada', value: 'finalizada' },
+    { label: 'Todas', value: 'T' },
+    { label: 'Pendente', value: 'P' },
+    { label: 'Iniciada', value: 'I' },
+    { label: 'Finalizada', value: 'F' },
+    { label: 'Solicitada', value: 'S' },
   ])
 
   function validate() {
     var valid = true
     return valid
   }
-
-  function resetErrors() {}
 
   return (
     <ScreenScrollContainer

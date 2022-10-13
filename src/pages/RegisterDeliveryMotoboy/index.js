@@ -5,7 +5,7 @@ import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 import { cadastroEntrega } from '../../services/entrega'
 
-export function RegisterDelivery({ navigation }) {
+export function RegisterDeliveryMotoboy({ navigation }) {
   const veiculos = {
     MOTO: 'moto',
     CARRO: 'carro',
@@ -128,7 +128,9 @@ export function RegisterDelivery({ navigation }) {
       if (response.status === 201) {
         if (validate()) {
           navigation.reset({
-            routes: [{ name: 'SearchMotoboy' }],
+            routes: [
+              { name: 'MainTabBottom', params: { screen: 'SearchMotoboy' } },
+            ],
           })
         }
       }

@@ -73,19 +73,26 @@ export function Login({ navigation }) {
   async function handleNavigateSearchDelivery() {
     try {
       if (!validate()) return
-      const response = await login({
+      const dadosLogin = {
         email: email,
         senha: password,
-      })
+      }
+      const response = await login(dadosLogin)
 
       if (response.status === 200) {
-        await AsyncStorage.setItem(
-          'usuario',
-          JSON.stringify(response.data.usuario)
-        )
-        navigation.reset({
-          routes: [{ name: 'MainTabBottom' }],
-        })
+        const usuarioLogado = response.data.usuario
+
+        await AsyncStorage.setItem('usuario', JSON.stringify(usuarioLogado))
+        console.log(usuarioLogado.flagtipousuario)
+        if (usuarioLogado.flagtipousuario === 'C') {
+          navigation.reset({
+            routes: [{ name: 'MainTabBottom' }],
+          })
+        } else {
+          navigation.reset({
+            routes: [{ name: 'MainTabBottomMotoboy' }],
+          })
+        }
       }
 
       if (response.status === 404) {

@@ -20,7 +20,7 @@ export const CustomTabBarMotoboy = ({ state, navigation }) => {
       </TabItem>
       <TabItem onPress={() => goTo('YourDelivery')}>
         <Icon
-          name="plus"
+          name="pencil"
           size={35}
           color={state.index === 1 ? colors.green : 'white'}
         />

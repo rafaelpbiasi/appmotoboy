@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
 import { Button, Card } from '../../components/molecules'
-import Toast from 'react-native-toast-message'
 import DropDownPicker from 'react-native-dropdown-picker'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { GenericButton } from '../../components/molecules/Button/styles'
 import { colors } from '../../styles/colors'
 
 export function SearchMotoboy({ navigation }) {
@@ -13,11 +10,11 @@ export function SearchMotoboy({ navigation }) {
   })
 
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('moto')
+  const [value, setValue] = useState('M')
   const [items, setItems] = useState([
-    { label: 'Moto', value: 'moto' },
-    { label: 'Carro', value: 'carro' },
-    { label: 'Ambos', value: 'ambos' },
+    { label: 'Moto', value: 'M' },
+    { label: 'Carro', value: 'C' },
+    { label: 'Ambos', value: 'A' },
   ])
 
   function validate() {
@@ -25,14 +22,12 @@ export function SearchMotoboy({ navigation }) {
     return valid
   }
 
-  function resetErrors() {}
-
-  function handleNavigateCadastroEntrega() {
-    navigation.navigate('RegisterDelivery')
-  }
-
-  function handleNavigateGerenciarEntrega() {
-    navigation.navigate('ManageDelivery')
+  function handleNavigateContratar() {
+    if (validate()) {
+      navigation.reset({
+        routes: [{ name: 'RegisterDeliveryMotoboy' }],
+      })
+    }
   }
 
   return (
@@ -108,7 +103,13 @@ export function SearchMotoboy({ navigation }) {
             Veículo:
           </Text>
         </Row>
-        <Button wp="48" mt="20" bg="greenLight" borderColor="greenLight">
+        <Button
+          wp="48"
+          mt="20"
+          bg="greenLight"
+          borderColor="greenLight"
+          onPress={handleNavigateContratar}
+        >
           Contratar
         </Button>
       </Card>
