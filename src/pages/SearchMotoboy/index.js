@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
 import { Button, Card } from '../../components/molecules'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { colors } from '../../styles/colors'
+import Toast from 'react-native-toast-message'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { buscarContratacoesMotoboys } from '../../services/entrega'
 
 export function SearchMotoboy({ navigation }) {
+  const [contratacoesMotoboys, setcontratacoesMotoboys] = useState([])
   const [errors, setErrors] = useState({
     Nome: '',
   })
@@ -29,6 +33,37 @@ export function SearchMotoboy({ navigation }) {
       })
     }
   }
+
+  async function buscar() {
+    try {
+      //const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
+
+      const response = await buscarContratacoesMotoboys()
+
+      if (response.status === 200) {
+        setcontratacoesMotoboys(response.data.contratacoesMotoboys)
+      }
+
+      if (response.status === 404) {
+        Toast.show({
+          type: 'error',
+          text1: 'Entregas não encontradas',
+          visibilityTime: 6000,
+        })
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro inesperado',
+        visibilityTime: 6000,
+      })
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    buscar()
+  }, [])
 
   return (
     <ScreenScrollContainer
@@ -73,46 +108,46 @@ export function SearchMotoboy({ navigation }) {
         <Text size="20">Avaliação:</Text>
       </Row>
 
-      <Card mt="30">
-        <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
-          <Text size="20" mr="5">
-            Nome do motoboy
-          </Text>
+      {contratacoesMotoboys.map((item, key) => (
+        <Card mt="30" key={key}>
+          <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+            <Text size="20" mr="5">
+              {item.contratado.nome}
+            </Text>
+            <Button wp="48" h="40" w="90">
+              Perfil
+            </Button>
+          </Row>
+          <Row
+            justify="space-between"
+            mt="10"
+            style={{ elevation: 10, zIndex: 10 }}
+          >
+            <Text size="20" mr="5">
+              Avaliação:
+            </Text>
+          </Row>
+          <Row
+            justify="space-between"
+            mt="10"
+            style={{ elevation: 10, zIndex: 10 }}
+          >
+            <Text size="20" mr="5">
+              {'Veículo: ' + item.contratado.flagtipoveiculo}
+            </Text>
+          </Row>
 
-          <Button wp="48" h="40" w="90">
-            Perfil
+          <Button
+            wp="48"
+            mt="20"
+            bg="greenLight"
+            borderColor="greenLight"
+            onPress={handleNavigateContratar}
+          >
+            Contratar
           </Button>
-        </Row>
-
-        <Row
-          justify="space-between"
-          mt="10"
-          style={{ elevation: 10, zIndex: 10 }}
-        >
-          <Text size="20" mr="5">
-            Avaliação:
-          </Text>
-        </Row>
-
-        <Row
-          justify="space-between"
-          mt="10"
-          style={{ elevation: 10, zIndex: 10 }}
-        >
-          <Text size="20" mr="5">
-            Veículo:
-          </Text>
-        </Row>
-        <Button
-          wp="48"
-          mt="20"
-          bg="greenLight"
-          borderColor="greenLight"
-          onPress={handleNavigateContratar}
-        >
-          Contratar
-        </Button>
-      </Card>
+        </Card>
+      ))}
     </ScreenScrollContainer>
   )
 }
