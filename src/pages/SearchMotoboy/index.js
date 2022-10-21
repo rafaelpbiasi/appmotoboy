@@ -5,7 +5,10 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import { colors } from '../../styles/colors'
 import Toast from 'react-native-toast-message'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { buscarContratacoesMotoboys } from '../../services/entrega'
+import {
+  buscarContratacoesMotoboys,
+  buscarContratacoesMotoboysVeiculo,
+} from '../../services/entrega'
 
 export function SearchMotoboy({ navigation }) {
   const [contratacoesMotoboys, setcontratacoesMotoboys] = useState([])
@@ -14,7 +17,7 @@ export function SearchMotoboy({ navigation }) {
   })
 
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('M')
+  const [value, setValue] = useState('A')
   const [items, setItems] = useState([
     { label: 'Moto', value: 'M' },
     { label: 'Carro', value: 'C' },
@@ -36,9 +39,15 @@ export function SearchMotoboy({ navigation }) {
 
   async function buscar() {
     try {
-      //const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
-
       const response = await buscarContratacoesMotoboys()
+
+      /*if (value === 'A') {
+        console.log('entrou')
+        const response = await buscarContratacoesMotoboys()
+      } else {
+        console.log('nao entrou')
+        const response = await buscarContratacoesMotoboysVeiculo(value)
+      }*/
 
       if (response.status === 200) {
         setcontratacoesMotoboys(response.data.contratacoesMotoboys)
@@ -102,10 +111,6 @@ export function SearchMotoboy({ navigation }) {
           setValue={setValue}
           setItems={setItems}
         />
-      </Row>
-
-      <Row wp="90" mt="10" justify="space-between">
-        <Text size="20">Avaliação:</Text>
       </Row>
 
       {contratacoesMotoboys.map((item, key) => (

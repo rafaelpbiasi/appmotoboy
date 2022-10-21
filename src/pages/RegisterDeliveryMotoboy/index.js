@@ -129,7 +129,7 @@ export function RegisterDeliveryMotoboy({ navigation }) {
         if (validate()) {
           navigation.reset({
             routes: [
-              { name: 'MainTabBottom', params: { screen: 'SearchMotoboy' } },
+              { name: 'MainTabBottom', params: { screen: 'ManageDelivery' } },
             ],
           })
         }

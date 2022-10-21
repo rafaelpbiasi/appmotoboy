@@ -128,7 +128,7 @@ export function RegisterDelivery({ navigation }) {
       if (response.status === 201) {
         if (validate()) {
           navigation.reset({
-            routes: [{ name: 'SearchMotoboy' }],
+            routes: [{ name: 'ManageDelivery' }],
           })
         }
       }

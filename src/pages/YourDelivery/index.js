@@ -5,7 +5,10 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import { colors } from '../../styles/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-toast-message'
-import { buscarContratacoesPorMotoboy } from '../../services/entrega'
+import {
+  buscarContratacoesMotoboysStatus,
+  buscarContratacoesPorMotoboy,
+} from '../../services/entrega'
 
 export function YourDelivery({ navigation }) {
   const [contratacoesMotoboy, setcontratacoesMotoboy] = useState([])
@@ -30,8 +33,18 @@ export function YourDelivery({ navigation }) {
   async function buscar() {
     try {
       const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
-
       const response = await buscarContratacoesPorMotoboy(usuarioLogado.id)
+
+      /*if (value === 'T') {
+        console.log('entrou')
+        const response = await buscarContratacoesPorMotoboy(usuarioLogado.id)
+      } else {
+        console.log('nao entrou')
+        const response = await buscarContratacoesMotoboysStatus(
+          usuarioLogado.id,
+          value
+        )
+      }*/
 
       if (response.status === 200) {
         setcontratacoesMotoboy(response.data.contratacoesMotoboy)
