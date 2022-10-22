@@ -11,6 +11,7 @@ export function SearchDelivery({ navigation }) {
   const [errors, setErrors] = useState({
     Nome: '',
   })
+  const [value, setValue] = useState(0)
 
   function validate() {
     var valid = true
@@ -36,8 +37,6 @@ export function SearchDelivery({ navigation }) {
 
   async function buscar() {
     try {
-      //const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
-
       const response = await buscarContratacoesEntregas()
 
       if (response.status === 200) {
@@ -63,7 +62,7 @@ export function SearchDelivery({ navigation }) {
 
   useEffect(() => {
     buscar()
-  }, [])
+  }, [value])
 
   return (
     <ScreenScrollContainer
@@ -75,15 +74,20 @@ export function SearchDelivery({ navigation }) {
         Busca de Entregas
       </Text>
 
-      <Row wp="90" mt="10" justify="space-between">
-        <Text size="20">Valor maior ou igual que R$</Text>
+      <Row mt="10" justify="space-between">
+        <Input
+          label="Valor"
+          placeholder="Digite um valor..."
+          keyboardType="numeric"
+          value={value}
+        />
       </Row>
 
       {contratacoesEntrega.map((item, key) => (
-        <Card mt="30" key={key}>
+        <Card mt="20" key={key}>
           <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
             <Text size="20" mr="5">
-              {item.contratante.nome}
+              {item?.contratante?.nome}
             </Text>
             <Button wp="48" h="40" w="90">
               Perfil
@@ -96,13 +100,13 @@ export function SearchDelivery({ navigation }) {
           >
             <Text size="20" mr="5" align="left">
               {'Origem: Rua: ' +
-                item.entrega.ruaorigem +
+                item?.entrega?.ruaorigem +
                 ', bairro: ' +
-                item.entrega.bairroorigem +
+                item?.entrega?.bairroorigem +
                 ', N° ' +
-                item.entrega.numeroorigem +
+                item?.entrega?.numeroorigem +
                 ', Referência: ' +
-                item.entrega.referenciaorigem}
+                item?.entrega?.referenciaorigem}
             </Text>
           </Row>
           <Row
@@ -112,13 +116,13 @@ export function SearchDelivery({ navigation }) {
           >
             <Text size="20" mr="5" align="left">
               {'Destino: Rua: ' +
-                item.entrega.ruadestino +
+                item?.entrega?.ruadestino +
                 ', bairro: ' +
-                item.entrega.bairrodestino +
+                item?.entrega?.bairrodestino +
                 ', N°: ' +
-                item.entrega.numerodestino +
+                item?.entrega?.numerodestino +
                 ', Referência: ' +
-                item.entrega.referenciadestino}
+                item?.entrega?.referenciadestino}
             </Text>
           </Row>
 
@@ -128,7 +132,7 @@ export function SearchDelivery({ navigation }) {
             style={{ elevation: 10, zIndex: 10 }}
           >
             <Text size="20" mr="5" align="left">
-              {'Valor: R$ ' + item.entrega.valor}
+              {'Valor: R$ ' + item?.entrega?.valor}
             </Text>
           </Row>
 

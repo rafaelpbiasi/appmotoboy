@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
-import { Button, Card } from '../../components/molecules'
+import { Button, Card, Input } from '../../components/molecules'
 import Toast from 'react-native-toast-message'
 import { Camera, Gallery, MEDIA } from '../../utils/media'
 
@@ -28,26 +28,6 @@ export function Perfil({ navigation }) {
     setImage(image)
   }
 
-  const handleCamera = async () => {
-    const result = await Camera()
-    if (result === MEDIA.CANCEL) {
-      return
-    }
-    if (result === MEDIA.PERMISSIONS) {
-      Toast.show({
-        type: 'info',
-        position: 'bottom',
-        text1: 'É preciso dar permissões para o aplicativo acessar sua camera',
-        visibilityTime: 6000,
-      })
-      return
-    }
-
-    const { uri: image } = result
-
-    setImage(image)
-  }
-
   return (
     <ScreenScrollContainer
       contentContainerStyle={{
@@ -55,30 +35,6 @@ export function Perfil({ navigation }) {
       }}
     >
       <Text wp="90" mt="90">
-        Upload foto de Perfil
-      </Text>
-      <Row wp="90" mt="15" justify="space-between">
-        <Button
-          wp="30"
-          onPress={async () => {
-            await handleGallery()
-          }}
-          bg="white"
-          color="greenDark"
-        >
-          Galeria
-        </Button>
-        <Button
-          wp="30"
-          onPress={async () => {
-            await handleCamera()
-          }}
-        >
-          Camera
-        </Button>
-      </Row>
-
-      <Text wp="90" mt="20">
         Nome do Usuário
       </Text>
 
@@ -95,6 +51,10 @@ export function Perfil({ navigation }) {
         <Text size="20" mr="5">
           Número
         </Text>
+      </Row>
+
+      <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+        <Input placeholder="Escreva um comentário..." />
       </Row>
 
       <Row justify="space-between" mt="30" ml="60">

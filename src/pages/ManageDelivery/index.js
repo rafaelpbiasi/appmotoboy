@@ -34,24 +34,22 @@ export function ManageDelivery({ navigation }) {
     try {
       console.log(value)
       const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
-      const response = await buscarContratacoesPorContratante(usuarioLogado.id)
+      var response = null
 
-      /*if (value === 'T') {
+      if (value === 'T') {
         console.log('entrou')
-        const response = await buscarContratacoesPorContratante(
-          usuarioLogado.id
-        )
+        response = await buscarContratacoesPorContratante(usuarioLogado.id)
       } else {
         console.log('nao entrou')
-        const response = await buscarContratacoesEntregasStatus(
+        response = await buscarContratacoesEntregasStatus(
           usuarioLogado.id,
           value
         )
-      }*/
+      }
 
       console.log(response.status)
       if (response.status === 200) {
-        setContratacoes(response.data.contratacoes)
+        setContratacoes(response.data.data)
       }
 
       if (response.status === 404) {
@@ -74,6 +72,22 @@ export function ManageDelivery({ navigation }) {
   useEffect(() => {
     buscar()
   }, [value])
+
+  function buscaDescrStatus(status) {
+    var descriStatus = ''
+
+    if (status === 'P') {
+      descriStatus = 'Pendente'
+    } else if (status === 'I') {
+      descriStatus = 'Iniciada'
+    } else if (status === 'F') {
+      descriStatus = 'Finalizada'
+    } else if (status === 'S') {
+      descriStatus = 'Solicitada'
+    }
+
+    return descriStatus
+  }
 
   return (
     <ScreenScrollContainer
@@ -117,7 +131,9 @@ export function ManageDelivery({ navigation }) {
         <Card mt="30" key={key}>
           <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
             <Text size="20" mr="5">
-              {item.contratado.nome}
+              {item.status === 'P'
+                ? 'entrega não aceita'
+                : item?.contratado?.nome}
             </Text>
             <Button wp="48" h="40" w="90">
               Perfil
@@ -129,7 +145,7 @@ export function ManageDelivery({ navigation }) {
             style={{ elevation: 10, zIndex: 10 }}
           >
             <Text size="20" mr="5">
-              Status: {item.status}
+              Status: {buscaDescrStatus(item.status)}
             </Text>
           </Row>
         </Card>

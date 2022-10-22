@@ -33,21 +33,19 @@ export function YourDelivery({ navigation }) {
   async function buscar() {
     try {
       const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
-      const response = await buscarContratacoesPorMotoboy(usuarioLogado.id)
+      var response = null
 
-      /*if (value === 'T') {
-        console.log('entrou')
-        const response = await buscarContratacoesPorMotoboy(usuarioLogado.id)
+      if (value === 'T') {
+        response = await buscarContratacoesPorMotoboy(usuarioLogado.id)
       } else {
-        console.log('nao entrou')
-        const response = await buscarContratacoesMotoboysStatus(
+        response = await buscarContratacoesMotoboysStatus(
           usuarioLogado.id,
           value
         )
-      }*/
+      }
 
       if (response.status === 200) {
-        setcontratacoesMotoboy(response.data.contratacoesMotoboy)
+        setcontratacoesMotoboy(response.data.data)
       }
 
       if (response.status === 404) {
@@ -113,7 +111,7 @@ export function YourDelivery({ navigation }) {
         <Card mt="30" key={key}>
           <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
             <Text size="20" mr="5">
-              {item.contratante.nome}
+              {item?.contratante?.nome}
             </Text>
             <Button wp="48" h="40" w="90">
               Perfil
@@ -126,13 +124,13 @@ export function YourDelivery({ navigation }) {
           >
             <Text size="20" mr="5" align="left">
               {'Origem: Rua: ' +
-                item.entrega.ruaorigem +
+                item?.entrega?.ruaorigem +
                 ', bairro: ' +
-                item.entrega.bairroorigem +
+                item?.entrega?.bairroorigem +
                 ', N° ' +
-                item.entrega.numeroorigem +
+                item?.entrega?.numeroorigem +
                 ', Referência: ' +
-                item.entrega.referenciaorigem}
+                item?.entrega?.referenciaorigem}
             </Text>
           </Row>
           <Row
@@ -142,13 +140,13 @@ export function YourDelivery({ navigation }) {
           >
             <Text size="20" mr="5" align="left">
               {'Destino: Rua: ' +
-                item.entrega.ruadestino +
+                item?.entrega?.ruadestino +
                 ', bairro: ' +
-                item.entrega.bairrodestino +
+                item?.entrega?.bairrodestino +
                 ', N°: ' +
-                item.entrega.numerodestino +
+                item?.entrega?.numerodestino +
                 ', Referência: ' +
-                item.entrega.referenciadestino}
+                item?.entrega?.referenciadestino}
             </Text>
           </Row>
 

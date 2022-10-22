@@ -3,28 +3,29 @@ import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
 import { Button, Input, RadioButton } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
-import { cadastroEntrega } from '../../services/entrega'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { cadastroContratacao, cadastroEntrega } from '../../services/entrega'
 
 export function RegisterDelivery({ navigation }) {
   const veiculos = {
-    MOTO: 'moto',
-    CARRO: 'carro',
-    AMBOS: 'ambos',
+    MOTO: 'M',
+    CARRO: 'C',
+    AMBOS: 'A',
   }
 
   const [errors, setErrors] = useState({
     RuaOrigem: '',
   })
   const [RuaOrigem, setRuaOrigem] = useState('')
-  const [NumeroOrigem, setNumeroOrigem] = useState('')
+  const [NumeroOrigem, setNumeroOrigem] = useState(null)
   const [BairroOrigem, setBairroOrigem] = useState('')
   const [ReferenciaOrigem, setReferenciaOrigem] = useState('')
   const [RuaDestino, setRuaDestino] = useState('')
-  const [NumeroDestino, setNumeroDestino] = useState('')
+  const [NumeroDestino, setNumeroDestino] = useState(null)
   const [BairroDestino, setBairroDestino] = useState('')
   const [ReferenciaDestino, setReferenciaDestino] = useState('')
   const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
-  const [Valor, setValor] = useState('')
+  const [Valor, setValor] = useState(null)
   const [Item, setItem] = useState('')
 
   function validate() {
@@ -97,10 +98,10 @@ export function RegisterDelivery({ navigation }) {
   function resetErrors() {
     setErrors({
       RuaOrigem: '',
-      NumeroOrigem: '',
+      NumeroOrigem: 0,
       BairroOrigem: '',
       RuaDestino: '',
-      NumeroDestino: '',
+      NumeroDestino: 0,
       BairroDestino: '',
       Valor: 0,
     })
@@ -108,6 +109,8 @@ export function RegisterDelivery({ navigation }) {
 
   async function handleNavigateSearchDelivery() {
     try {
+      if (!validate()) return
+
       const dadosEntrega = {
         ruaorigem: RuaOrigem,
         numeroorigem: NumeroOrigem,
@@ -123,12 +126,35 @@ export function RegisterDelivery({ navigation }) {
         cidade: 'Dois Vizinhos',
         estado: 'Parana',
       }
+
       const response = await cadastroEntrega(dadosEntrega)
 
       if (response.status === 201) {
-        if (validate()) {
+        const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
+        const data = new Date()
+
+        const dadosContratacao = {
+          status: 'P',
+          codusuariocontratado: null,
+          codusuariocontratante: usuarioLogado.id,
+          codentrega: response.data.id,
+          data: data,
+        }
+
+        const responseContratacao = await cadastroContratacao(dadosContratacao)
+
+        if (responseContratacao.status === 201) {
           navigation.reset({
             routes: [{ name: 'ManageDelivery' }],
+          })
+        }
+
+        if (responseContratacao.status === 400) {
+          console.log(response.data)
+          Toast.show({
+            type: 'info',
+            text1: 'Valide seus dados',
+            visibilityTime: 6000,
           })
         }
       }

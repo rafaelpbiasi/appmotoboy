@@ -8,10 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   buscarContratacoesMotoboys,
   buscarContratacoesMotoboysVeiculo,
-} from '../../services/entrega'
+} from '../../services/usuario'
 
 export function SearchMotoboy({ navigation }) {
-  const [contratacoesMotoboys, setcontratacoesMotoboys] = useState([])
+  const [findmotoboys, setfindmotoboys] = useState([])
   const [errors, setErrors] = useState({
     Nome: '',
   })
@@ -19,9 +19,9 @@ export function SearchMotoboy({ navigation }) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('A')
   const [items, setItems] = useState([
-    { label: 'Moto', value: 'M' },
-    { label: 'Carro', value: 'C' },
     { label: 'Ambos', value: 'A' },
+    { label: 'Carro', value: 'C' },
+    { label: 'Moto', value: 'M' },
   ])
 
   function validate() {
@@ -39,18 +39,17 @@ export function SearchMotoboy({ navigation }) {
 
   async function buscar() {
     try {
-      const response = await buscarContratacoesMotoboys()
+      var response = null
 
-      /*if (value === 'A') {
-        console.log('entrou')
-        const response = await buscarContratacoesMotoboys()
+      console.log(value)
+      if (value === 'A') {
+        response = await buscarContratacoesMotoboys()
       } else {
-        console.log('nao entrou')
-        const response = await buscarContratacoesMotoboysVeiculo(value)
-      }*/
+        response = await buscarContratacoesMotoboysVeiculo(value)
+      }
 
       if (response.status === 200) {
-        setcontratacoesMotoboys(response.data.contratacoesMotoboys)
+        setfindmotoboys(response.data.data)
       }
 
       if (response.status === 404) {
@@ -72,7 +71,21 @@ export function SearchMotoboy({ navigation }) {
 
   useEffect(() => {
     buscar()
-  }, [])
+  }, [value])
+
+  function buscaDescrVeiculo(veiculo) {
+    var descriVeiculo = ''
+
+    if (veiculo === 'M') {
+      descriVeiculo = 'Moto'
+    } else if (veiculo === 'C') {
+      descriVeiculo = 'Carro'
+    } else {
+      descriVeiculo = 'Ambos'
+    }
+
+    return descriVeiculo
+  }
 
   return (
     <ScreenScrollContainer
@@ -113,11 +126,11 @@ export function SearchMotoboy({ navigation }) {
         />
       </Row>
 
-      {contratacoesMotoboys.map((item, key) => (
+      {findmotoboys.map((item, key) => (
         <Card mt="30" key={key}>
           <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
             <Text size="20" mr="5">
-              {item.contratado.nome}
+              {item.nome}
             </Text>
             <Button wp="48" h="40" w="90">
               Perfil
@@ -129,16 +142,17 @@ export function SearchMotoboy({ navigation }) {
             style={{ elevation: 10, zIndex: 10 }}
           >
             <Text size="20" mr="5">
-              Avaliação:
+              {'Veículo: ' + buscaDescrVeiculo(item.flagtipoveiculo)}
             </Text>
           </Row>
+
           <Row
             justify="space-between"
             mt="10"
             style={{ elevation: 10, zIndex: 10 }}
           >
             <Text size="20" mr="5">
-              {'Veículo: ' + item.contratado.flagtipoveiculo}
+              {'Telefone: ' + item.telefone}
             </Text>
           </Row>
 
