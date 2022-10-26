@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   ScreenScrollContainer,
   Row,
@@ -11,8 +11,10 @@ import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 import { login } from '../../services/usuario'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
+import AuthContext from '../../contexts/auth'
 
-export function Login({ navigation }) {
+export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [next, setNext] = useState('')
@@ -20,6 +22,9 @@ export function Login({ navigation }) {
     email: '',
     password: '',
   })
+
+  const { signIn } = useContext(AuthContext)
+  const navigation = useNavigation()
 
   function validate() {
     var valid = true
@@ -77,23 +82,7 @@ export function Login({ navigation }) {
         email: email,
         senha: password,
       }
-      const response = await login(dadosLogin)
-
-      if (response.status === 200) {
-        const usuarioLogado = response.data.usuario
-
-        await AsyncStorage.setItem('usuario', JSON.stringify(usuarioLogado))
-        console.log(usuarioLogado.flagtipousuario)
-        if (usuarioLogado.flagtipousuario === 'C') {
-          navigation.reset({
-            routes: [{ name: 'MainTabBottom' }],
-          })
-        } else {
-          navigation.reset({
-            routes: [{ name: 'MainTabBottomMotoboy' }],
-          })
-        }
-      }
+      const response = await signIn(dadosLogin)
 
       if (response.status === 404) {
         Toast.show({

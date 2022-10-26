@@ -5,6 +5,7 @@ import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { cadastroContratacao, cadastroEntrega } from '../../services/entrega'
+import { Mask } from '../../utils/mask'
 
 export function RegisterDeliveryMotoboy({ navigation }) {
   const veiculos = {
@@ -20,8 +21,8 @@ export function RegisterDeliveryMotoboy({ navigation }) {
   const [NumeroOrigem, setNumeroOrigem] = useState(null)
   const [BairroOrigem, setBairroOrigem] = useState('')
   const [ReferenciaOrigem, setReferenciaOrigem] = useState('')
-  const [RuaDestino, setRuaDestino] = useState(null)
-  const [NumeroDestino, setNumeroDestino] = useState(0)
+  const [RuaDestino, setRuaDestino] = useState('')
+  const [NumeroDestino, setNumeroDestino] = useState(null)
   const [BairroDestino, setBairroDestino] = useState('')
   const [ReferenciaDestino, setReferenciaDestino] = useState('')
   const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
@@ -98,12 +99,12 @@ export function RegisterDeliveryMotoboy({ navigation }) {
   function resetErrors() {
     setErrors({
       RuaOrigem: '',
-      NumeroOrigem: 0,
+      NumeroOrigem: '',
       BairroOrigem: '',
       RuaDestino: '',
-      NumeroDestino: 0,
+      NumeroDestino: '',
       BairroDestino: '',
-      Valor: 0,
+      Valor: '',
     })
   }
 
@@ -324,7 +325,7 @@ export function RegisterDeliveryMotoboy({ navigation }) {
         value={Valor}
         onChangeText={(text) => {
           resetErrors()
-          setValor(text)
+          setValor(Mask.MoedaMask(text))
         }}
         messageError={errors.Valor}
         returnKeyType={'next'}

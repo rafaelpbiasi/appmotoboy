@@ -1,10 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import {
-  Login,
   Home,
-  RecoverPassword,
-  NewPassword,
-  Register,
   RegisterDelivery,
   SearchDelivery,
   SearchMotoboy,
@@ -18,25 +14,21 @@ import {
 import MainTabBottom from './MainTabBottom'
 import MainTabBottomMotoboy from './MainTabBottomMotoboy'
 
-export function MainRoutes() {
+export function MainRoutes({ telaInicial }) {
   const Stack = createNativeStackNavigator()
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName={telaInicial}
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="MainTabBottom" component={MainTabBottom} />
       <Stack.Screen
         name="MainTabBottomMotoboy"
         component={MainTabBottomMotoboy}
       />
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="NewPassword" component={NewPassword} />
       <Stack.Screen name="RegisterDelivery" component={RegisterDelivery} />
       <Stack.Screen name="SearchDelivery" component={SearchDelivery} />
       <Stack.Screen name="SearchMotoboy" component={SearchMotoboy} />

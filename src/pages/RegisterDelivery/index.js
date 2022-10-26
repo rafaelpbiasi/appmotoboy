@@ -5,6 +5,7 @@ import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { cadastroContratacao, cadastroEntrega } from '../../services/entrega'
+import { Mask } from '../../utils/mask'
 
 export function RegisterDelivery({ navigation }) {
   const veiculos = {
@@ -98,12 +99,12 @@ export function RegisterDelivery({ navigation }) {
   function resetErrors() {
     setErrors({
       RuaOrigem: '',
-      NumeroOrigem: 0,
+      NumeroOrigem: '',
       BairroOrigem: '',
       RuaDestino: '',
-      NumeroDestino: 0,
+      NumeroDestino: '',
       BairroDestino: '',
-      Valor: 0,
+      Valor: '',
     })
   }
 
@@ -120,7 +121,7 @@ export function RegisterDelivery({ navigation }) {
         numerodestino: NumeroDestino,
         bairrodestino: BairroDestino,
         referenciadestino: ReferenciaDestino,
-        valor: Valor,
+        valor: Number(String(Valor).replace(',', '.')),
         flagtipoveiculo: tipoVeiculo,
         item: Item,
         cidade: 'Dois Vizinhos',
@@ -323,7 +324,7 @@ export function RegisterDelivery({ navigation }) {
         value={Valor}
         onChangeText={(text) => {
           resetErrors()
-          setValor(text)
+          setValor(Mask.MoedaMask(text))
         }}
         messageError={errors.Valor}
         returnKeyType={'next'}

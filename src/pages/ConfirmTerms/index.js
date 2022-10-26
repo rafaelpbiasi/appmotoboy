@@ -6,7 +6,9 @@ import Toast from 'react-native-toast-message'
 
 export function ConfirmTerms({ navigation }) {
   function handleNavigateRegister() {
-    navigation.navigate('Register')
+    navigation.navigate('Register', {
+      confirmouTermos: true,
+    })
   }
 
   return (

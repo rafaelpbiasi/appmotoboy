@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
 import { Button, Card, Input } from '../../components/molecules'
 import Toast from 'react-native-toast-message'
 import { Camera, Gallery, MEDIA } from '../../utils/media'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { colors } from '../../styles/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
+import AuthContext from '../../contexts/auth'
 
-export function Perfil({ navigation }) {
+export function Perfil() {
+  const navigation = useNavigation()
+  const { signOut } = useContext(AuthContext)
   function handleNavigateRelatorio() {
     navigation.navigate('Relatorio')
   }
@@ -28,15 +35,22 @@ export function Perfil({ navigation }) {
     setImage(image)
   }
 
+  const sair = async () => {
+    await signOut()
+  }
+
   return (
     <ScreenScrollContainer
       contentContainerStyle={{
         alignItems: 'center',
       }}
     >
-      <Text wp="90" mt="90">
-        Nome do Usuário
-      </Text>
+      <Row justify="space-between" wp="90" mt="90">
+        <Text>Nome do Usuário</Text>
+        <Button onPress={sair} borderColor="green" bg="white" w="40" h="40">
+          <Icon name="exit-outline" size={30} color={colors.green} />
+        </Button>
+      </Row>
 
       <Row justify="space-between" mt="40" ml="60">
         <Text size="20" mr="5">

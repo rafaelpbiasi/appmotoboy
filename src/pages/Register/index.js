@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
 import { Button, Input, RadioButton } from '../../components/molecules'
@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message'
 import { TextInputMask } from 'react-native-masked-text'
 import { GenericButton } from '../../components/molecules/Button/styles'
 import { cadastroUsuario } from '../../services/usuario'
+import { Mask } from '../../utils/mask'
 
 const tipos = {
   MOTOBOY: 'M',
@@ -20,7 +21,7 @@ const veiculos = {
   AMBOS: 'A',
 }
 
-export function Register({ navigation }) {
+export function Register({ route, navigation }) {
   const [Nome, setNome] = useState('')
   const [Telefone, setTelefone] = useState('')
   const [Email, setEmail] = useState('')
@@ -37,6 +38,13 @@ export function Register({ navigation }) {
   const [Rua, setRua] = useState('')
   const [Numero, setNumero] = useState('')
   const [Cep, setCep] = useState('')
+
+  useEffect(() => {
+    if (route.params) {
+      const { confirmouTermos } = route.params
+      setTermos(confirmouTermos)
+    }
+  }, [route])
 
   function validate() {
     var valid = true
@@ -327,7 +335,7 @@ export function Register({ navigation }) {
           value={Cep}
           onChangeText={(text) => {
             resetErrors()
-            setCep(text)
+            setCep(Mask.CepMask(text))
           }}
           messageError={errors.Cep}
           returnKeyType={'go'}
@@ -363,7 +371,7 @@ export function Register({ navigation }) {
         value={Telefone}
         onChangeText={(text) => {
           resetErrors()
-          setTelefone(text)
+          setTelefone(Mask.TelefoneMask(text))
         }}
         messageError={errors.Telefone}
         returnKeyType={'go'}
@@ -408,7 +416,7 @@ export function Register({ navigation }) {
         value={Cpf}
         onChangeText={(text) => {
           resetErrors()
-          setCpf(text)
+          setCpf(Mask.CpfCnpjMask(text))
         }}
         messageError={errors.Cpf}
         returnKeyType={'go'}
@@ -437,11 +445,14 @@ export function Register({ navigation }) {
 
       <Row wp="90" mt="20">
         <RadioButton
+          title=""
           checked={termos}
           setChecked={(isChecked) => {
             setTermos(isChecked)
           }}
-          disableBuiltInState={false}
+          disableBuiltInState={
+            route?.params?.confirmouTermos && termos ? true : false
+          }
         />
         <GenericButton onPress={handleNavigateConfirmaTermos}>
           <Text size="20" weight="500">

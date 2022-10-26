@@ -8,6 +8,7 @@ export const RadioButton = ({
   ml,
   disableBuiltInState = true,
 }) => {
+  console.log(title + checked)
   return (
     <BouncyCheckbox
       size={25}

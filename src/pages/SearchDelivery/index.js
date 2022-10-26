@@ -4,14 +4,18 @@ import { Button, Card, Input, RadioButton } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 import Toast from 'react-native-toast-message'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { buscarContratacoesEntregas } from '../../services/entrega'
+import {
+  buscarContratacoesEntregas,
+  buscarContratacoesPorMotoboyValor,
+} from '../../services/entrega'
+import { Mask } from '../../utils/mask'
 
 export function SearchDelivery({ navigation }) {
   const [contratacoesEntrega, setcontratacoesEntrega] = useState([])
   const [errors, setErrors] = useState({
     Nome: '',
   })
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState(null)
 
   function validate() {
     var valid = true
@@ -37,10 +41,18 @@ export function SearchDelivery({ navigation }) {
 
   async function buscar() {
     try {
-      const response = await buscarContratacoesEntregas()
+      var response = null
+
+      console.log(value)
+
+      if (value === 0 || value === null) {
+        response = await buscarContratacoesEntregas()
+      } else {
+        response = await buscarContratacoesPorMotoboyValor(value)
+      }
 
       if (response.status === 200) {
-        setcontratacoesEntrega(response.data.contratacoesEntrega)
+        setcontratacoesEntrega(response.data.data)
       }
 
       if (response.status === 404) {
@@ -62,7 +74,7 @@ export function SearchDelivery({ navigation }) {
 
   useEffect(() => {
     buscar()
-  }, [value])
+  }, [])
 
   return (
     <ScreenScrollContainer
@@ -80,6 +92,12 @@ export function SearchDelivery({ navigation }) {
           placeholder="Digite um valor..."
           keyboardType="numeric"
           value={value}
+          onChangeText={(text) => {
+            resetErrors()
+            setValue(Mask.MoedaMask(text))
+          }}
+          returnKeyType="done"
+          onSubmitEditing={buscar}
         />
       </Row>
 

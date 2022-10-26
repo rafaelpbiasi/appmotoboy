@@ -20,6 +20,10 @@ export function buscarContratacoesEntregas() {
   return api.get(`/contratacao/entregas/`)
 }
 
+export function buscarContratacoesPorMotoboyValor(valor) {
+  return api.get(`/contratacao/entregas/${valor}`)
+}
+
 export function buscarContratacoesEntregasStatus(idContratante, status) {
   return api.get(`/contratacao/entregas/${idContratante}/${status}`)
 }
