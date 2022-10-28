@@ -15,3 +15,11 @@ export function buscarContratacoesMotoboys() {
 export function buscarContratacoesMotoboysVeiculo(veiculo) {
   return api.get(`/usuario/motoboys/veiculo/${veiculo}`)
 }
+
+export function perfilUsuarioLogado(idUsuario) {
+  return api.get(`/usuario/perfil/${idUsuario}`)
+}
+
+export function relatorioUsuarioLogado(idUsuario) {
+  return api.get(`/usuario/relatorio/${idUsuario}`)
+}

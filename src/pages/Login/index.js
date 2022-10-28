@@ -116,7 +116,7 @@ export function Login() {
       }}
     >
       <Text mt="80" size="35" weight="bold">
-        NOME APP
+        Eazy Delivery
       </Text>
       <CardImage
         w="200"

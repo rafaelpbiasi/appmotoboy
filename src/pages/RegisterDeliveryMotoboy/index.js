@@ -121,7 +121,7 @@ export function RegisterDeliveryMotoboy({ navigation }) {
         numerodestino: NumeroDestino,
         bairrodestino: BairroDestino,
         referenciadestino: ReferenciaDestino,
-        valor: Valor,
+        valor: Number(String(Valor).replace(',', '.')),
         flagtipoveiculo: tipoVeiculo,
         item: Item,
         cidade: 'Dois Vizinhos',

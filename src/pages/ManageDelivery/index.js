@@ -131,7 +131,7 @@ export function ManageDelivery({ navigation }) {
         <Card mt="30" key={key}>
           <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
             <Text size="20" mr="5">
-              {item.status === 'P'
+              {item.status === 'P' || item.status === 'S'
                 ? 'entrega não aceita'
                 : item?.contratado?.nome}
             </Text>

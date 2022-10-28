@@ -1,39 +1,60 @@
-import React, { useContext, useState } from 'react'
-import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
-import { Button, Card, Input } from '../../components/molecules'
+import React, { useContext, useEffect, useState } from 'react'
+import {
+  ScreenScrollContainer,
+  Row,
+  Text,
+  Column,
+  Divisor,
+} from '../../components/atoms'
+import { Button, Card, Input, ModalImage } from '../../components/molecules'
 import Toast from 'react-native-toast-message'
-import { Camera, Gallery, MEDIA } from '../../utils/media'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { colors } from '../../styles/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import AuthContext from '../../contexts/auth'
+import { perfilUsuarioLogado } from '../../services/usuario'
+import { BASE_URL } from '../../api'
 
 export function Perfil() {
+  const [abrirModal, setAbrirModal] = useState(false)
   const navigation = useNavigation()
   const { signOut } = useContext(AuthContext)
+  const [perfil, setPerfil] = useState([])
   function handleNavigateRelatorio() {
     navigation.navigate('Relatorio')
   }
 
-  const handleGallery = async () => {
-    const result = await Gallery()
-    if (result === MEDIA.CANCEL) {
-      return
-    }
-    if (result === MEDIA.PERMISSIONS) {
+  async function buscar() {
+    try {
+      const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
+      console.log(usuarioLogado)
+      const response = await perfilUsuarioLogado(usuarioLogado.id)
+
+      if (response.status === 200) {
+        setPerfil(response.data.data)
+      }
+
+      if (response.status === 404) {
+        Toast.show({
+          type: 'error',
+          text1: 'Perfil não encontrado',
+          visibilityTime: 6000,
+        })
+      }
+    } catch (error) {
       Toast.show({
-        type: 'info',
-        position: 'bottom',
-        text1: 'É preciso dar permissões para o aplicativo acessar sua galeria',
+        type: 'error',
+        text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      return
+      console.log(error)
     }
-
-    const { uri: image } = result
-    setImage(image)
   }
+
+  useEffect(() => {
+    buscar()
+  }, [])
 
   const sair = async () => {
     await signOut()
@@ -45,45 +66,68 @@ export function Perfil() {
         alignItems: 'center',
       }}
     >
-      <Row justify="space-between" wp="90" mt="90">
-        <Text>Nome do Usuário</Text>
-        <Button onPress={sair} borderColor="green" bg="white" w="40" h="40">
-          <Icon name="exit-outline" size={30} color={colors.green} />
-        </Button>
-      </Row>
+      <Column wp="90" mt="50">
+        <Row justify="space-between" wp="90" mt="10">
+          <Text>{perfil.nome}</Text>
 
-      <Row justify="space-between" mt="40" ml="60">
-        <Text size="20" mr="5">
-          Avaliação
-        </Text>
+          <Button
+            onPress={() => {
+              if (perfil?.fotocnh) {
+                setAbrirModal(true)
+              }
+            }}
+            borderColor="green"
+            bg="white"
+            w="40"
+            h="40"
+          >
+            <Icon name="documents" size={30} color={colors.green} />
+          </Button>
 
-        <Button wp="48" h="40" w="90" mr="60" onPress={handleNavigateRelatorio}>
-          Relatório
-        </Button>
-      </Row>
-      <Row justify="space-between" mt="10" ml="60">
-        <Text size="20" mr="5">
-          Número
-        </Text>
-      </Row>
+          <Button onPress={sair} borderColor="green" bg="white" w="40" h="40">
+            <Icon name="exit-outline" size={30} color={colors.green} />
+          </Button>
+        </Row>
 
-      <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
-        <Input placeholder="Escreva um comentário..." />
-      </Row>
+        <Row justify="space-between" mt="40">
+          <Text size="20">Avaliação</Text>
 
-      <Row justify="space-between" mt="30" ml="60">
-        <Text size="30" mr="5">
-          Comentários
-        </Text>
-      </Row>
-
-      <Card mt="30">
-        <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
-          <Text size="15" mr="5">
-            Nome do avaliador
+          <Button wp="48" h="40" w="90" onPress={handleNavigateRelatorio}>
+            Relatório
+          </Button>
+        </Row>
+        <Row justify="space-between" mt="10">
+          <Text size="20" mr="5">
+            {'Telefone: ' + perfil.telefone}
           </Text>
         </Row>
-      </Card>
+
+        <Divisor mt="15" />
+
+        <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+          <Input placeholder="Escreva um comentário..." />
+        </Row>
+
+        <Row justify="space-between" mt="30">
+          <Text size="30" mr="5">
+            Comentários
+          </Text>
+        </Row>
+
+        <Card mt="30">
+          <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+            <Text size="15" mr="5">
+              Nome do avaliador
+            </Text>
+          </Row>
+        </Card>
+      </Column>
+
+      <ModalImage
+        show={abrirModal}
+        setShow={setAbrirModal}
+        image={BASE_URL + perfil.fotocnh}
+      />
     </ScreenScrollContainer>
   )
 }
