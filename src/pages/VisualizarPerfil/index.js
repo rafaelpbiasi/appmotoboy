@@ -10,39 +10,35 @@ import { Button, Card, Input, ModalImage } from '../../components/molecules'
 import Toast from 'react-native-toast-message'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { colors } from '../../styles/colors'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useNavigation } from '@react-navigation/native'
-import AuthContext from '../../contexts/auth'
 import {
   avaliacaoUsuarioLogado,
   perfilUsuarioLogado,
 } from '../../services/usuario'
 import { BASE_URL } from '../../api'
+import { cadastroAvaliacao } from '../../services/avaliacao'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { createIconSetFromFontello } from 'react-native-vector-icons'
 
-export function Perfil() {
+export function VisualizarPerfil({ route, navigation }) {
   const [abrirModal, setAbrirModal] = useState(false)
-  const navigation = useNavigation()
-  const { signOut } = useContext(AuthContext)
   const [perfil, setPerfil] = useState([])
+  const [idPerfil, setIdPerfil] = useState(null)
+  const [comentario, setComentario] = useState(null)
   const [avaliacao, setAvaliacao] = useState([])
-  function handleNavigateRelatorio() {
-    navigation.navigate('Relatorio')
-  }
+  const [apresentaComentario, setApresentaComentario] = useState([])
 
-  async function buscar() {
+  async function buscar(idUsuario) {
     try {
-      const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
-      const response = await perfilUsuarioLogado(usuarioLogado.id)
-
-      var responseAvaliacao = null
+      setIdPerfil(idUsuario)
+      const response = await perfilUsuarioLogado(idUsuario)
 
       if (response.status === 200) {
         setPerfil(response.data.data)
 
-        responseAvaliacao = await avaliacaoUsuarioLogado(usuarioLogado.id)
+        responseAvaliacao = await avaliacaoUsuarioLogado(idUsuario)
 
         if (responseAvaliacao.status === 200) {
-          setAvaliacao(responseAvaliacao.data.data)
+          setApresentaComentario(responseAvaliacao.data.data)
         }
 
         if (responseAvaliacao.status === 404) {
@@ -72,11 +68,46 @@ export function Perfil() {
   }
 
   useEffect(() => {
-    buscar()
-  }, [])
+    if (route.params) {
+      const { idUsuario } = route.params
+      buscar(idUsuario)
+    }
+  }, [route])
 
-  const sair = async () => {
-    await signOut()
+  async function inserirComentario() {
+    try {
+      const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
+      const dadosValiacao = {
+        comentario: comentario,
+        codperfilavaliador: usuarioLogado,
+        codperfilavaliado: idPerfil,
+      }
+
+      console.log(dadosValiacao)
+
+      const response = await cadastroAvaliacao(dadosValiacao)
+
+      if (response.status === 201) {
+        setAvaliacao(response.avaliacao)
+        setComentario('')
+        await buscar(idPerfil)
+      }
+
+      if (response.status === 404) {
+        Toast.show({
+          type: 'error',
+          text1: 'Entregas não encontradas',
+          visibilityTime: 6000,
+        })
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro inesperado',
+        visibilityTime: 6000,
+      })
+      console.log(error)
+    }
   }
 
   return (
@@ -88,6 +119,7 @@ export function Perfil() {
       <Column wp="90" mt="50">
         <Row justify="space-between" wp="90" mt="10">
           <Text weight="bold">{perfil.nome}</Text>
+
           {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
             <Button
               onPress={() => {
@@ -103,10 +135,6 @@ export function Perfil() {
               <Icon name="documents" size={30} color={colors.green} />
             </Button>
           )}
-
-          <Button onPress={sair} borderColor="green" bg="white" w="40" h="40">
-            <Icon name="exit-outline" size={30} color={colors.green} />
-          </Button>
         </Row>
 
         <Divisor mt="15" />
@@ -115,13 +143,7 @@ export function Perfil() {
           {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
             <Text size="20">{'Qtde entregas: ' + perfil.qtdEntrega}</Text>
           )}
-          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
-            <Button wp="48" h="40" w="90" onPress={handleNavigateRelatorio}>
-              Relatório
-            </Button>
-          )}
         </Row>
-
         <Row justify="space-between" mt="10">
           <Text size="20" mr="5">
             {'Telefone: ' + perfil.telefone}
@@ -130,18 +152,31 @@ export function Perfil() {
 
         <Divisor mt="15" />
 
-        <Row justify="space-between" mt="30">
+        <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+          <Input
+            placeholder="Escreva um comentário..."
+            value={comentario}
+            onChangeText={(text) => {
+              setComentario(text)
+            }}
+            returnKeyType="next"
+            onSubmitEditing={inserirComentario}
+          />
+        </Row>
+
+        <Row justify="space-between" mt="20">
           <Text size="30" mr="5">
             Comentários
           </Text>
         </Row>
 
-        {avaliacao.map((item, key) => (
+        {apresentaComentario.map((item, key) => (
           <Card mt="30" key={key} align="left">
             <Text size="20" align="left" weight="bold">
               {item?.perfilavaliador?.nome}
             </Text>
-            <Text size="20" align="left">
+            <Divisor />
+            <Text size="20" align="left" mt="10">
               {item?.comentario}
             </Text>
           </Card>

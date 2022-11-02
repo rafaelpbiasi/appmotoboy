@@ -20,6 +20,10 @@ export function perfilUsuarioLogado(idUsuario) {
   return api.get(`/usuario/perfil/${idUsuario}`)
 }
 
+export function avaliacaoUsuarioLogado(idUsuario) {
+  return api.get(`/usuario/perfil/avaliacao/${idUsuario}`)
+}
+
 export function relatorioUsuarioLogado(idUsuario) {
   return api.get(`/usuario/relatorio/${idUsuario}`)
 }

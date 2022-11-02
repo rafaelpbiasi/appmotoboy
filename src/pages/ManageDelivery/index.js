@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
+import {
+  ScreenScrollContainer,
+  Row,
+  Text,
+  Container,
+} from '../../components/atoms'
 import { Button, Input, RadioButton, Card } from '../../components/molecules'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { colors } from '../../styles/colors'
@@ -9,8 +14,10 @@ import {
   buscarContratacoesEntregasStatus,
   buscarContratacoesPorContratante,
 } from '../../services/entrega'
+import { FlatList, RefreshControl } from 'react-native'
 
 export function ManageDelivery({ navigation }) {
+  const [refreshing, setRefreshing] = useState(false)
   const [contratacoes, setContratacoes] = useState([])
   const [errors, setErrors] = useState({
     Nome: '',
@@ -28,6 +35,12 @@ export function ManageDelivery({ navigation }) {
   function validate() {
     var valid = true
     return valid
+  }
+
+  function handleNavigatePerfil(idUsuario) {
+    navigation.navigate('VisualizarPerfil', {
+      idUsuario,
+    })
   }
 
   async function buscar() {
@@ -59,12 +72,14 @@ export function ManageDelivery({ navigation }) {
           visibilityTime: 6000,
         })
       }
+      setRefreshing(false)
     } catch (error) {
       Toast.show({
         type: 'error',
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
+      setRefreshing(false)
       console.log(error)
     }
   }
@@ -90,11 +105,7 @@ export function ManageDelivery({ navigation }) {
   }
 
   return (
-    <ScreenScrollContainer
-      contentContainerStyle={{
-        alignItems: 'center',
-      }}
-    >
+    <Container align="center">
       <Text mt="80" size="35" weight="bold">
         Gerenciar Entregas
       </Text>
@@ -127,29 +138,64 @@ export function ManageDelivery({ navigation }) {
           setItems={setItems}
         />
       </Row>
-      {contratacoes.map((item, key) => (
-        <Card mt="30" key={key}>
-          <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
-            <Text size="20" mr="5">
-              {item.status === 'P' || item.status === 'S'
-                ? 'entrega não aceita'
-                : item?.contratado?.nome}
-            </Text>
-            <Button wp="48" h="40" w="90">
-              Perfil
-            </Button>
-          </Row>
-          <Row
-            justify="space-between"
-            mt="10"
-            style={{ elevation: 10, zIndex: 10 }}
-          >
-            <Text size="20" mr="5">
-              Status: {buscaDescrStatus(item.status)}
-            </Text>
-          </Row>
-        </Card>
-      ))}
-    </ScreenScrollContainer>
+
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true)
+              buscar()
+            }}
+          />
+        }
+        data={contratacoes}
+        style={{
+          width: '90%',
+        }}
+        renderItem={({ item }) => (
+          <Card mt="30" wp="100">
+            <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+              <Text size="20" mr="5">
+                {item.status === 'P'
+                  ? 'entrega não aceita'
+                  : item?.contratado?.nome}
+              </Text>
+              <Button
+                wp="48"
+                h="40"
+                w="90"
+                onPress={() => handleNavigatePerfil(item.contratado.id)}
+              >
+                Perfil
+              </Button>
+            </Row>
+            <Row
+              justify="space-between"
+              mt="10"
+              style={{ elevation: 10, zIndex: 10 }}
+            >
+              <Text size="20" mr="5">
+                Status: {buscaDescrStatus(item.status)}
+              </Text>
+
+              {item.status === 'P' && (
+                <Button wp="48" h="40" w="90" bg="red" borderColor="red">
+                  Cancelar
+                </Button>
+              )}
+              {item.status === 'S' && (
+                <Button wp="48" h="40" w="90" bg="red" borderColor="red">
+                  Cancelar
+                </Button>
+              )}
+            </Row>
+          </Card>
+        )}
+        ListEmptyComponent={() => <Text>Nenhuma entrega encontrada!</Text>}
+        keyExtractor={(item) => item.id}
+      />
+    </Container>
   )
 }

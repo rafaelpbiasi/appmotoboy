@@ -38,6 +38,7 @@ export function Register({ route, navigation }) {
   const [Rua, setRua] = useState('')
   const [Numero, setNumero] = useState('')
   const [Cep, setCep] = useState('')
+  const [next, setNext] = useState('')
 
   useEffect(() => {
     if (route.params) {
@@ -324,7 +325,7 @@ export function Register({ route, navigation }) {
               setNumero(text)
             }}
             messageError={errors.Numero}
-            returnKeyType={'go'}
+            returnKeyType="done"
             wpContainer="30"
             wp="100"
           />
@@ -338,7 +339,7 @@ export function Register({ route, navigation }) {
             setCep(Mask.CepMask(text))
           }}
           messageError={errors.Cep}
-          returnKeyType={'go'}
+          returnKeyType="done"
         />
       </>
     )
@@ -362,7 +363,7 @@ export function Register({ route, navigation }) {
           setNome(text)
         }}
         messageError={errors.Nome}
-        returnKeyType={'next'}
+        returnKeyType="next"
         blurOnSubmit={false}
       />
       <Input
@@ -374,7 +375,7 @@ export function Register({ route, navigation }) {
           setTelefone(Mask.TelefoneMask(text))
         }}
         messageError={errors.Telefone}
-        returnKeyType={'go'}
+        returnKeyType="done"
       />
       <Input
         label="E-mail"
@@ -419,7 +420,7 @@ export function Register({ route, navigation }) {
           setCpf(Mask.CpfCnpjMask(text))
         }}
         messageError={errors.Cpf}
-        returnKeyType={'go'}
+        returnKeyType="done"
       />
 
       <Row wp="90" mt="10">

@@ -116,7 +116,7 @@ export function Login() {
       }}
     >
       <Text mt="80" size="35" weight="bold">
-        Eazy Delivery
+        Easy Delivery
       </Text>
       <CardImage
         w="200"

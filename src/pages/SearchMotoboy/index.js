@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
+import {
+  ScreenScrollContainer,
+  Row,
+  Text,
+  Container,
+} from '../../components/atoms'
 import { Button, Card } from '../../components/molecules'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { colors } from '../../styles/colors'
@@ -9,8 +14,10 @@ import {
   buscarContratacoesMotoboys,
   buscarContratacoesMotoboysVeiculo,
 } from '../../services/usuario'
+import { FlatList, RefreshControl } from 'react-native'
 
 export function SearchMotoboy({ navigation }) {
+  const [refreshing, setRefreshing] = useState(false)
   const [findmotoboys, setfindmotoboys] = useState([])
   const [errors, setErrors] = useState({
     Nome: '',
@@ -29,12 +36,16 @@ export function SearchMotoboy({ navigation }) {
     return valid
   }
 
-  function handleNavigateContratar() {
-    if (validate()) {
-      navigation.reset({
-        routes: [{ name: 'RegisterDeliveryMotoboy' }],
-      })
-    }
+  function handleNavigateContratar(idMotoboy) {
+    navigation.navigate('RegisterDeliveryMotoboy', {
+      idMotoboy,
+    })
+  }
+
+  function handleNavigatePerfil(idUsuario) {
+    navigation.navigate('VisualizarPerfil', {
+      idUsuario,
+    })
   }
 
   async function buscar() {
@@ -59,12 +70,14 @@ export function SearchMotoboy({ navigation }) {
           visibilityTime: 6000,
         })
       }
+      setRefreshing(false)
     } catch (error) {
       Toast.show({
         type: 'error',
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
+      setRefreshing(false)
       console.log(error)
     }
   }
@@ -88,11 +101,7 @@ export function SearchMotoboy({ navigation }) {
   }
 
   return (
-    <ScreenScrollContainer
-      contentContainerStyle={{
-        alignItems: 'center',
-      }}
-    >
+    <Container align="center">
       <Text mt="80" size="35" weight="bold">
         Busca de Motoboys
       </Text>
@@ -126,47 +135,70 @@ export function SearchMotoboy({ navigation }) {
         />
       </Row>
 
-      {findmotoboys.map((item, key) => (
-        <Card mt="30" key={key}>
-          <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
-            <Text size="20" mr="5">
-              {item.nome}
-            </Text>
-            <Button wp="48" h="40" w="90">
-              Perfil
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true)
+              buscar()
+            }}
+          />
+        }
+        data={findmotoboys}
+        style={{
+          width: '90%',
+        }}
+        renderItem={({ item }) => (
+          <Card mt="30" wp="100">
+            <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
+              <Text size="20" mr="5">
+                {item.nome}
+              </Text>
+              <Button
+                wp="48"
+                h="40"
+                w="90"
+                onPress={() => handleNavigatePerfil(item.id)}
+              >
+                Perfil
+              </Button>
+            </Row>
+            <Row
+              justify="space-between"
+              mt="10"
+              style={{ elevation: 10, zIndex: 10 }}
+            >
+              <Text size="20" mr="5">
+                {'Veículo: ' + buscaDescrVeiculo(item.flagtipoveiculo)}
+              </Text>
+            </Row>
+
+            <Row
+              justify="space-between"
+              mt="10"
+              style={{ elevation: 10, zIndex: 10 }}
+            >
+              <Text size="20" mr="5">
+                {'Telefone: ' + item.telefone}
+              </Text>
+            </Row>
+
+            <Button
+              wp="48"
+              mt="20"
+              bg="greenLight"
+              borderColor="greenLight"
+              onPress={() => handleNavigateContratar(item.id)}
+            >
+              Contratar
             </Button>
-          </Row>
-          <Row
-            justify="space-between"
-            mt="10"
-            style={{ elevation: 10, zIndex: 10 }}
-          >
-            <Text size="20" mr="5">
-              {'Veículo: ' + buscaDescrVeiculo(item.flagtipoveiculo)}
-            </Text>
-          </Row>
-
-          <Row
-            justify="space-between"
-            mt="10"
-            style={{ elevation: 10, zIndex: 10 }}
-          >
-            <Text size="20" mr="5">
-              {'Telefone: ' + item.telefone}
-            </Text>
-          </Row>
-
-          <Button
-            wp="48"
-            mt="20"
-            bg="greenLight"
-            borderColor="greenLight"
-            onPress={handleNavigateContratar}
-          >
-            Contratar
-          </Button>
-        </Card>
-      ))}
-    </ScreenScrollContainer>
+          </Card>
+        )}
+        ListEmptyComponent={() => <Text>Nenhum motoboy encontrado!</Text>}
+        keyExtractor={(item) => item.id}
+      />
+    </Container>
   )
 }

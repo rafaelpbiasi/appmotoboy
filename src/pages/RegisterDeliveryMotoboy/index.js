@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
 import { Button, Input, RadioButton } from '../../components/molecules'
 import { Validates } from '../../utils/validates'
@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { cadastroContratacao, cadastroEntrega } from '../../services/entrega'
 import { Mask } from '../../utils/mask'
 
-export function RegisterDeliveryMotoboy({ navigation }) {
+export function RegisterDeliveryMotoboy({ route, navigation }) {
   const veiculos = {
     MOTO: 'M',
     CARRO: 'C',
@@ -28,6 +28,14 @@ export function RegisterDeliveryMotoboy({ navigation }) {
   const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
   const [Valor, setValor] = useState(null)
   const [Item, setItem] = useState('')
+  const [idContratado, setIdContratado] = useState(null)
+
+  useEffect(() => {
+    if (route.params) {
+      const { idMotoboy } = route.params
+      setIdContratado(idMotoboy)
+    }
+  }, [route])
 
   function validate() {
     var valid = true
@@ -135,7 +143,7 @@ export function RegisterDeliveryMotoboy({ navigation }) {
 
         const dadosContratacao = {
           status: 'S',
-          codusuariocontratado: null,
+          codusuariocontratado: idContratado,
           codusuariocontratante: usuarioLogado.id,
           codentrega: response.data.id,
           data: data,

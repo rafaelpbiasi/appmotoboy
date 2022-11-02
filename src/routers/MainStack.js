@@ -10,6 +10,7 @@ import {
   Perfil,
   Relatorio,
   RegisterDeliveryMotoboy,
+  VisualizarPerfil,
 } from '../pages'
 import MainTabBottom from './MainTabBottom'
 import MainTabBottomMotoboy from './MainTabBottomMotoboy'
@@ -37,6 +38,7 @@ export function MainRoutes({ telaInicial }) {
       <Stack.Screen name="ConfirmTerms" component={ConfirmTerms} />
       <Stack.Screen name="Perfil" component={Perfil} />
       <Stack.Screen name="Relatorio" component={Relatorio} />
+      <Stack.Screen name="VisualizarPerfil" component={VisualizarPerfil} />
       <Stack.Screen
         name="RegisterDeliveryMotoboy"
         component={RegisterDeliveryMotoboy}

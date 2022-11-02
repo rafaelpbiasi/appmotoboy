@@ -31,3 +31,7 @@ export function buscarContratacoesEntregasStatus(idContratante, status) {
 export function buscarContratacoesMotoboysStatus(idMotoboy, status) {
   return api.get(`/contratacao/motoboys/${idMotoboy}/${status}`)
 }
+
+export function contratacaoMotoboy(dadosAtualizaContratacao) {
+  return api.patch(`/contratacao/atualizacontratacao`, dadosAtualizaContratacao)
+}
