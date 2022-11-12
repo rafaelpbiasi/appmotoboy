@@ -235,7 +235,7 @@ export function YourDelivery({ navigation }) {
               mt="10"
               style={{ elevation: 10, zIndex: 10 }}
             >
-              {item.status === 'S' ? (
+              {item.status === 'S' && (
                 <>
                   <Button
                     wp="48"
@@ -262,43 +262,36 @@ export function YourDelivery({ navigation }) {
                     Aceitar
                   </Button>
                 </>
-              ) : item.status === 'F' ? (
-                <Button
-                  wp="48"
-                  mt="20"
-                  bg="greenLight"
-                  borderColor="greenLight"
-                >
-                  Finalizado
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    wp="48"
-                    mt="20"
-                    bg="greenLight"
-                    borderColor="greenLight"
-                  >
-                    Abrir GPS
-                  </Button>
-
-                  <Button
-                    wp="48"
-                    mt="20"
-                    bg="greenLight"
-                    borderColor="greenLight"
-                    onPress={() =>
-                      handleNavigateFinalizarEntrega(
-                        item.id,
-                        item.contratado.id,
-                        'F'
-                      )
-                    }
-                  >
-                    Finalizar
-                  </Button>
-                </>
               )}
+              {item.status === 'P' ||
+                (item.status === 'I' && (
+                  <>
+                    <Button
+                      wp="48"
+                      mt="20"
+                      bg="greenLight"
+                      borderColor="greenLight"
+                    >
+                      Abrir GPS
+                    </Button>
+
+                    <Button
+                      wp="48"
+                      mt="20"
+                      bg="greenLight"
+                      borderColor="greenLight"
+                      onPress={() =>
+                        handleNavigateFinalizarEntrega(
+                          item.id,
+                          item.contratado.id,
+                          'F'
+                        )
+                      }
+                    >
+                      Finalizar
+                    </Button>
+                  </>
+                ))}
             </Row>
           </Card>
         )}

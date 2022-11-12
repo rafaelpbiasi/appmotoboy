@@ -311,8 +311,7 @@ export function Register({ route, navigation }) {
               setRua(text)
             }}
             messageError={errors.Rua}
-            returnKeyType={'next'}
-            blurOnSubmit={false}
+            returnKeyType={'go'}
             wpContainer="68"
             wp="100"
           />
@@ -363,8 +362,7 @@ export function Register({ route, navigation }) {
           setNome(text)
         }}
         messageError={errors.Nome}
-        returnKeyType="next"
-        blurOnSubmit={false}
+        returnKeyType={'go'}
       />
       <Input
         label="Telefone"

@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message'
 import {
   buscarContratacoesEntregasStatus,
   buscarContratacoesPorContratante,
+  deletaEntrega,
 } from '../../services/entrega'
 import { FlatList, RefreshControl } from 'react-native'
 
@@ -41,6 +42,43 @@ export function ManageDelivery({ navigation }) {
     navigation.navigate('VisualizarPerfil', {
       idUsuario,
     })
+  }
+
+  async function handleNavigateCancelarEntrega(idContratacao) {
+    if (validate()) {
+      try {
+        if (!validate()) return
+
+        console.log(idContratacao)
+
+        const response = await deletaEntrega(idContratacao)
+
+        if (response.status === 202) {
+          Toast.show({
+            type: 'info',
+            text1: 'Entrega cancelada com sucesso',
+            visibilityTime: 6000,
+          })
+          await buscar()
+        }
+
+        if (response.status === 400) {
+          console.log(response.data)
+          Toast.show({
+            type: 'info',
+            text1: 'Erro',
+            visibilityTime: 6000,
+          })
+        }
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro inesperado',
+          visibilityTime: 6000,
+        })
+        console.log(error)
+      }
+    }
   }
 
   async function buscar() {
@@ -166,7 +204,7 @@ export function ManageDelivery({ navigation }) {
                 wp="48"
                 h="40"
                 w="90"
-                onPress={() => handleNavigatePerfil(item.contratado.id)}
+                onPress={() => handleNavigatePerfil(item?.contratado?.id)}
               >
                 Perfil
               </Button>
@@ -181,12 +219,26 @@ export function ManageDelivery({ navigation }) {
               </Text>
 
               {item.status === 'P' && (
-                <Button wp="48" h="40" w="90" bg="red" borderColor="red">
+                <Button
+                  wp="48"
+                  h="40"
+                  w="90"
+                  bg="red"
+                  borderColor="red"
+                  onPress={() => handleNavigateCancelarEntrega(item.id)}
+                >
                   Cancelar
                 </Button>
               )}
               {item.status === 'S' && (
-                <Button wp="48" h="40" w="90" bg="red" borderColor="red">
+                <Button
+                  wp="48"
+                  h="40"
+                  w="90"
+                  bg="red"
+                  borderColor="red"
+                  onPress={() => handleNavigateCancelarEntrega(item.id)}
+                >
                   Cancelar
                 </Button>
               )}

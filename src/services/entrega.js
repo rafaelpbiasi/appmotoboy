@@ -35,3 +35,7 @@ export function buscarContratacoesMotoboysStatus(idMotoboy, status) {
 export function contratacaoMotoboy(dadosAtualizaContratacao) {
   return api.patch(`/contratacao/atualizacontratacao`, dadosAtualizaContratacao)
 }
+
+export function deletaEntrega(idContratacao) {
+  return api.delete(`/contratacao/deletacontratacao/${idContratacao}`)
+}

@@ -197,8 +197,7 @@ export function RegisterDelivery({ navigation }) {
             setRuaOrigem(text)
           }}
           messageError={errors.RuaOrigem}
-          returnKeyType={'next'}
-          blurOnSubmit={false}
+          returnKeyType={'go'}
           wpContainer="68"
           wp="100"
         />
@@ -211,7 +210,7 @@ export function RegisterDelivery({ navigation }) {
             setNumeroOrigem(text)
           }}
           messageError={errors.NumeroOrigem}
-          returnKeyType={'go'}
+          returnKeyType="done"
           wpContainer="30"
           wp="100"
         />
@@ -224,8 +223,7 @@ export function RegisterDelivery({ navigation }) {
           setBairroOrigem(text)
         }}
         messageError={errors.BairroOrigem}
-        returnKeyType={'next'}
-        blurOnSubmit={false}
+        returnKeyType={'go'}
       />
       <Input
         label="Referência Origem"
@@ -235,8 +233,7 @@ export function RegisterDelivery({ navigation }) {
           setReferenciaOrigem(text)
         }}
         messageError={errors.ReferenciaOrigem}
-        returnKeyType={'next'}
-        blurOnSubmit={false}
+        returnKeyType={'go'}
       />
       <Row wp="90" justify="space-between">
         <Input
@@ -247,8 +244,7 @@ export function RegisterDelivery({ navigation }) {
             setRuaDestino(text)
           }}
           messageError={errors.RuaDestino}
-          returnKeyType={'next'}
-          blurOnSubmit={false}
+          returnKeyType={'go'}
           wpContainer="68"
           wp="100"
         />
@@ -261,7 +257,7 @@ export function RegisterDelivery({ navigation }) {
             setNumeroDestino(text)
           }}
           messageError={errors.NumeroDestino}
-          returnKeyType={'go'}
+          returnKeyType="done"
           wpContainer="30"
           wp="100"
         />
@@ -274,8 +270,7 @@ export function RegisterDelivery({ navigation }) {
           setBairroDestino(text)
         }}
         messageError={errors.BairroDestino}
-        returnKeyType={'next'}
-        blurOnSubmit={false}
+        returnKeyType={'go'}
       />
       <Input
         label="Referência Destino"
@@ -285,8 +280,7 @@ export function RegisterDelivery({ navigation }) {
           setReferenciaDestino(text)
         }}
         messageError={errors.ReferenciaDestino}
-        returnKeyType={'next'}
-        blurOnSubmit={false}
+        returnKeyType={'go'}
       />
       <>
         <Row wp="90" mt="10" mb="10">
@@ -327,8 +321,7 @@ export function RegisterDelivery({ navigation }) {
           setValor(Mask.MoedaMask(text))
         }}
         messageError={errors.Valor}
-        returnKeyType={'next'}
-        blurOnSubmit={false}
+        returnKeyType="done"
       />
 
       <Input
@@ -339,8 +332,7 @@ export function RegisterDelivery({ navigation }) {
           setItem(text)
         }}
         messageError={errors.Item}
-        returnKeyType={'next'}
-        blurOnSubmit={false}
+        returnKeyType={'go'}
       />
 
       <Button mt="10" wp="48" mb="50" onPress={handleNavigateSearchDelivery}>
