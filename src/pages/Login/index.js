@@ -158,13 +158,7 @@ export function Login() {
         returnKeyType={'go'}
         onSubmitEditing={handleNavigateSearchDelivery}
       />
-      <Row wp="85" mt="8">
-        <GenericButton onPress={handleNavigateRecoverPassword}>
-          <Text size="20" weight="500">
-            Esqueceu sua senha?
-          </Text>
-        </GenericButton>
-      </Row>
+
       <Row mt="60" mb="20" wp="90" justify="space-between">
         <Button
           wp="48"
