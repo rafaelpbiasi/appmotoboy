@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ScreenScrollContainer,
   Row,
@@ -15,7 +15,8 @@ import {
   buscarContratacoesPorMotoboy,
   contratacaoMotoboy,
 } from '../../services/entrega'
-import { FlatList, RefreshControl } from 'react-native'
+import { FlatList, Linking, RefreshControl } from 'react-native'
+import ModalAsync from '../../components/molecules/ModalAsync'
 
 export function YourDelivery({ navigation }) {
   const [refreshing, setRefreshing] = useState(false)
@@ -33,15 +34,54 @@ export function YourDelivery({ navigation }) {
     { label: 'Solicitada', value: 'S' },
   ])
 
+  const modalRef = useRef()
+  const modalRef2 = useRef()
+
   function validate() {
     var valid = true
     return valid
+  }
+
+  const abrirModalAceitar = (idContratacao, idContratado, status) => {
+    const modal = modalRef.current
+    setTimeout(async () => {
+      try {
+        await modal.show()
+        handleNavigateFinalizarEntrega(idContratacao, idContratado, status)
+        modal.hide()
+      } catch (err) {
+        modal.hide()
+        return
+      }
+    }, 100)
+  }
+
+  const abrirModalFinalizar = (idContratacao, idContratado, status) => {
+    const modal = modalRef2.current
+    setTimeout(async () => {
+      try {
+        await modal.show()
+        handleNavigateFinalizarEntrega(idContratacao, idContratado, status)
+        modal.hide()
+      } catch (err) {
+        modal.hide()
+        return
+      }
+    }, 100)
   }
 
   function handleNavigatePerfil(idUsuario) {
     navigation.navigate('VisualizarPerfil', {
       idUsuario,
     })
+  }
+
+  function handleAbrirGPS(data) {
+    const endPointOrigem = `${data.ruaorigem}, ${data.numeroorigem}, ${data.bairroorigem}, ${data.cidade} - ${data.estado}`
+    const endPointDestino = `${data.ruadestino}, ${data.numerodestino}, ${data.bairrodestino}, ${data.cidade} - ${data.estado}`
+    Linking.openURL(
+      `https://www.google.com/maps/dir/?api=1&origin=${endPointOrigem}&destination=${endPointDestino}`
+    )
   }
 
   async function handleNavigateFinalizarEntrega(
@@ -59,8 +99,6 @@ export function YourDelivery({ navigation }) {
           idContratado: idContratado,
         }
 
-        console.log(dadosAtualizaContratacao)
-
         const response = await contratacaoMotoboy(dadosAtualizaContratacao)
 
         if (response.status === 201) {
@@ -73,7 +111,6 @@ export function YourDelivery({ navigation }) {
         }
 
         if (response.status === 400) {
-          console.log(response.data)
           Toast.show({
             type: 'info',
             text1: 'Erro',
@@ -86,7 +123,6 @@ export function YourDelivery({ navigation }) {
           text1: 'Erro inesperado',
           visibilityTime: 6000,
         })
-        console.log(error)
       }
     }
   }
@@ -124,7 +160,6 @@ export function YourDelivery({ navigation }) {
         visibilityTime: 6000,
       })
       setRefreshing(false)
-      console.log(error)
     }
   }
 
@@ -242,6 +277,7 @@ export function YourDelivery({ navigation }) {
                     mt="20"
                     bg="greenLight"
                     borderColor="greenLight"
+                    onPress={() => handleAbrirGPS(item.entrega)}
                   >
                     Abrir GPS
                   </Button>
@@ -252,11 +288,7 @@ export function YourDelivery({ navigation }) {
                     bg="greenLight"
                     borderColor="greenLight"
                     onPress={() =>
-                      handleNavigateFinalizarEntrega(
-                        item.id,
-                        item.contratado.id,
-                        'I'
-                      )
+                      abrirModalAceitar(item.id, item.contratado.id, 'I')
                     }
                   >
                     Aceitar
@@ -271,6 +303,7 @@ export function YourDelivery({ navigation }) {
                       mt="20"
                       bg="greenLight"
                       borderColor="greenLight"
+                      onPress={() => handleAbrirGPS(item.entrega)}
                     >
                       Abrir GPS
                     </Button>
@@ -281,23 +314,38 @@ export function YourDelivery({ navigation }) {
                       bg="greenLight"
                       borderColor="greenLight"
                       onPress={() =>
-                        handleNavigateFinalizarEntrega(
-                          item.id,
-                          item.contratado.id,
-                          'F'
-                        )
+                        abrirModalFinalizar(item.id, item.contratado.id, 'F')
                       }
                     >
                       Finalizar
                     </Button>
                   </>
                 ))}
+              {item.status === 'F' && (
+                <>
+                  <Text ml="20" size={30} weight="bold" mt="10">
+                    Entrega Finalizada
+                  </Text>
+                </>
+              )}
             </Row>
           </Card>
         )}
-        ListEmptyComponent={() => <Text>Nenhuma entrega encontrada!</Text>}
+        ListEmptyComponent={() => (
+          <Text mt="20">Nenhuma entrega encontrada!</Text>
+        )}
         keyExtractor={(item) => item.id}
       />
+      <ModalAsync ref={modalRef}>
+        <Text align="left" size={18} weight="bold" mb="20">
+          Deseja realmente aceitar essa entrega?
+        </Text>
+      </ModalAsync>
+      <ModalAsync ref={modalRef2}>
+        <Text align="left" size={18} weight="bold" mb="20">
+          Deseja realmente finalizar essa entrega?
+        </Text>
+      </ModalAsync>
     </Container>
   )
 }

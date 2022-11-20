@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ScreenScrollContainer,
   Row,
@@ -16,7 +16,8 @@ import {
   contratacaoMotoboy,
 } from '../../services/entrega'
 import { Mask } from '../../utils/mask'
-import { FlatList, RefreshControl } from 'react-native'
+import { FlatList, Linking, RefreshControl } from 'react-native'
+import ModalAsync from '../../components/molecules/ModalAsync'
 
 export function SearchDelivery({ navigation }) {
   const [refreshing, setRefreshing] = useState(false)
@@ -26,6 +27,8 @@ export function SearchDelivery({ navigation }) {
   })
   const [value, setValue] = useState(null)
 
+  const modalRef = useRef()
+
   function validate() {
     var valid = true
     return valid
@@ -33,14 +36,31 @@ export function SearchDelivery({ navigation }) {
 
   function resetErrors() {}
 
-  function handleNavigateSuasEntregas() {
-    navigation.navigate('YourDelivery')
+  const abrirModalAceitar = (idContratacao) => {
+    const modal = modalRef.current
+    setTimeout(async () => {
+      try {
+        await modal.show()
+        handleNavigateAceitarEntrega(idContratacao)
+        modal.hide()
+      } catch (err) {
+        modal.hide()
+        return
+      }
+    }, 100)
   }
 
   function handleNavigatePerfil(idUsuario) {
     navigation.navigate('VisualizarPerfil', {
       idUsuario,
     })
+  }
+
+  function handleAbrirGPS(data) {
+    const endPointOrigem = `${data.ruaorigem}, ${data.numeroorigem}, ${data.bairroorigem}, ${data.cidade} - ${data.estado}`
+    Linking.openURL(
+      `https://www.google.com/maps/dir/?api=1&destination=${endPointOrigem}`
+    )
   }
 
   async function handleNavigateAceitarEntrega(idContratacao) {
@@ -56,8 +76,6 @@ export function SearchDelivery({ navigation }) {
           idUsuario: usuarioLogado.id,
         }
 
-        console.log(dadosAtualizaContratacao)
-
         const response = await contratacaoMotoboy(dadosAtualizaContratacao)
 
         if (response.status === 200) {
@@ -71,7 +89,6 @@ export function SearchDelivery({ navigation }) {
         }
 
         if (response.status === 400) {
-          console.log(response.data)
           Toast.show({
             type: 'info',
             text1: 'Erro',
@@ -84,7 +101,6 @@ export function SearchDelivery({ navigation }) {
           text1: 'Erro inesperado',
           visibilityTime: 6000,
         })
-        console.log(error)
       }
     }
   }
@@ -92,8 +108,6 @@ export function SearchDelivery({ navigation }) {
   async function buscar() {
     try {
       var response = null
-
-      console.log(value)
 
       if (value === 0 || value === null) {
         response = await buscarContratacoesEntregas()
@@ -120,7 +134,6 @@ export function SearchDelivery({ navigation }) {
         visibilityTime: 6000,
       })
       setRefreshing(false)
-      console.log(error)
     }
   }
 
@@ -227,7 +240,13 @@ export function SearchDelivery({ navigation }) {
               mt="10"
               style={{ elevation: 10, zIndex: 10 }}
             >
-              <Button wp="48" mt="20" bg="greenLight" borderColor="greenLight">
+              <Button
+                wp="48"
+                mt="20"
+                bg="greenLight"
+                borderColor="greenLight"
+                onPress={() => handleAbrirGPS(item.entrega)}
+              >
                 Abrir GPS
               </Button>
               <Button
@@ -235,16 +254,23 @@ export function SearchDelivery({ navigation }) {
                 mt="20"
                 bg="greenLight"
                 borderColor="greenLight"
-                onPress={() => handleNavigateAceitarEntrega(item.id)}
+                onPress={() => abrirModalAceitar(item.id)}
               >
                 Aceitar
               </Button>
             </Row>
           </Card>
         )}
-        ListEmptyComponent={() => <Text>Nenhuma entrega encontrada!</Text>}
+        ListEmptyComponent={() => (
+          <Text mt="20">Nenhuma entrega encontrada!</Text>
+        )}
         keyExtractor={(item) => item.id}
       />
+      <ModalAsync ref={modalRef}>
+        <Text align="left" size={18} weight="bold" mb="20">
+          Deseja realmente aceitar essa entrega?
+        </Text>
+      </ModalAsync>
     </Container>
   )
 }

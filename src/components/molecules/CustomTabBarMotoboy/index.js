@@ -29,7 +29,7 @@ export const CustomTabBarMotoboy = ({ state, navigation }) => {
         <Icon
           name="user"
           size={35}
-          color={state.index === 3 ? colors.green : 'white'}
+          color={state.index === 2 ? colors.green : 'white'}
         />
       </TabItem>
     </TabArea>

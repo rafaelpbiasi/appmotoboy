@@ -97,7 +97,6 @@ export function Login() {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 

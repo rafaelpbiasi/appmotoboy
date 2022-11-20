@@ -18,6 +18,8 @@ import { BASE_URL } from '../../api'
 import { cadastroAvaliacao } from '../../services/avaliacao'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
+import { GenericButton } from '../../components/molecules/Button/styles'
+import { Linking } from 'react-native'
 
 export function VisualizarPerfil({ route, navigation }) {
   const [abrirModal, setAbrirModal] = useState(false)
@@ -63,7 +65,6 @@ export function VisualizarPerfil({ route, navigation }) {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 
@@ -82,8 +83,6 @@ export function VisualizarPerfil({ route, navigation }) {
         codperfilavaliador: usuarioLogado,
         codperfilavaliado: idPerfil,
       }
-
-      console.log(dadosValiacao)
 
       const response = await cadastroAvaliacao(dadosValiacao)
 
@@ -106,8 +105,12 @@ export function VisualizarPerfil({ route, navigation }) {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
+  }
+
+  function handlerAbrirFone() {
+    const telefone = String(perfil.telefone).replace(/\D/g, '')
+    Linking.openURL(`whatsapp://send?phone=55${telefone}`)
   }
 
   return (
@@ -145,9 +148,11 @@ export function VisualizarPerfil({ route, navigation }) {
           )}
         </Row>
         <Row justify="space-between" mt="10">
-          <Text size="20" mr="5">
-            {'Telefone: ' + perfil.telefone}
-          </Text>
+          <GenericButton onPress={handlerAbrirFone}>
+            <Text size="20" mr="5">
+              {'Telefone: ' + perfil.telefone}
+            </Text>
+          </GenericButton>
         </Row>
 
         <Divisor mt="15" />

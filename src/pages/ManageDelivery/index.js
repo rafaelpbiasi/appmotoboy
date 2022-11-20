@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ScreenScrollContainer,
   Row,
   Text,
   Container,
+  Column,
 } from '../../components/atoms'
 import { Button, Input, RadioButton, Card } from '../../components/molecules'
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -16,6 +17,7 @@ import {
   deletaEntrega,
 } from '../../services/entrega'
 import { FlatList, RefreshControl } from 'react-native'
+import ModalAsync from '../../components/molecules/ModalAsync'
 
 export function ManageDelivery({ navigation }) {
   const [refreshing, setRefreshing] = useState(false)
@@ -33,6 +35,8 @@ export function ManageDelivery({ navigation }) {
     { label: 'Solicitada', value: 'S' },
   ])
 
+  const modalRef = useRef()
+
   function validate() {
     var valid = true
     return valid
@@ -44,12 +48,24 @@ export function ManageDelivery({ navigation }) {
     })
   }
 
+  const abrirModalCancelar = (idContratacao) => {
+    const modal = modalRef.current
+    setTimeout(async () => {
+      try {
+        await modal.show()
+        handleNavigateCancelarEntrega(idContratacao)
+        modal.hide()
+      } catch (err) {
+        modal.hide()
+        return
+      }
+    }, 100)
+  }
+
   async function handleNavigateCancelarEntrega(idContratacao) {
     if (validate()) {
       try {
         if (!validate()) return
-
-        console.log(idContratacao)
 
         const response = await deletaEntrega(idContratacao)
 
@@ -63,7 +79,6 @@ export function ManageDelivery({ navigation }) {
         }
 
         if (response.status === 400) {
-          console.log(response.data)
           Toast.show({
             type: 'info',
             text1: 'Erro',
@@ -76,29 +91,24 @@ export function ManageDelivery({ navigation }) {
           text1: 'Erro inesperado',
           visibilityTime: 6000,
         })
-        console.log(error)
       }
     }
   }
 
   async function buscar() {
     try {
-      console.log(value)
       const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
       var response = null
 
       if (value === 'T') {
-        console.log('entrou')
         response = await buscarContratacoesPorContratante(usuarioLogado.id)
       } else {
-        console.log('nao entrou')
         response = await buscarContratacoesEntregasStatus(
           usuarioLogado.id,
           value
         )
       }
 
-      console.log(response.status)
       if (response.status === 200) {
         setContratacoes(response.data.data)
       }
@@ -118,7 +128,6 @@ export function ManageDelivery({ navigation }) {
         visibilityTime: 6000,
       })
       setRefreshing(false)
-      console.log(error)
     }
   }
 
@@ -200,14 +209,36 @@ export function ManageDelivery({ navigation }) {
                   ? 'entrega não aceita'
                   : item?.contratado?.nome}
               </Text>
-              <Button
-                wp="48"
-                h="40"
-                w="90"
-                onPress={() => handleNavigatePerfil(item?.contratado?.id)}
-              >
-                Perfil
-              </Button>
+              {item.status === 'I' && (
+                <Button
+                  wp="48"
+                  h="40"
+                  w="90"
+                  onPress={() => handleNavigatePerfil(item?.contratado?.id)}
+                >
+                  Perfil
+                </Button>
+              )}
+              {item.status === 'F' && (
+                <Button
+                  wp="48"
+                  h="40"
+                  w="90"
+                  onPress={() => handleNavigatePerfil(item?.contratado?.id)}
+                >
+                  Perfil
+                </Button>
+              )}
+              {item.status === 'S' && (
+                <Button
+                  wp="48"
+                  h="40"
+                  w="90"
+                  onPress={() => handleNavigatePerfil(item?.contratado?.id)}
+                >
+                  Perfil
+                </Button>
+              )}
             </Row>
             <Row
               justify="space-between"
@@ -222,10 +253,10 @@ export function ManageDelivery({ navigation }) {
                 <Button
                   wp="48"
                   h="40"
-                  w="90"
+                  w="100"
                   bg="red"
                   borderColor="red"
-                  onPress={() => handleNavigateCancelarEntrega(item.id)}
+                  onPress={() => abrirModalCancelar(item.id)}
                 >
                   Cancelar
                 </Button>
@@ -236,8 +267,9 @@ export function ManageDelivery({ navigation }) {
                   h="40"
                   w="90"
                   bg="red"
+                  p="5"
                   borderColor="red"
-                  onPress={() => handleNavigateCancelarEntrega(item.id)}
+                  onPress={() => abrirModalCancelar(item.id)}
                 >
                   Cancelar
                 </Button>
@@ -245,9 +277,16 @@ export function ManageDelivery({ navigation }) {
             </Row>
           </Card>
         )}
-        ListEmptyComponent={() => <Text>Nenhuma entrega encontrada!</Text>}
+        ListEmptyComponent={() => (
+          <Text mt="20">Nenhuma entrega encontrada!</Text>
+        )}
         keyExtractor={(item) => item.id}
       />
+      <ModalAsync ref={modalRef}>
+        <Text align="left" size={18} weight="bold" mb="20">
+          Deseja realmente cancelar essa entrega?
+        </Text>
+      </ModalAsync>
     </Container>
   )
 }

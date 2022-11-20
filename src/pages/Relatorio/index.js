@@ -30,7 +30,6 @@ export function Relatorio({}) {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 

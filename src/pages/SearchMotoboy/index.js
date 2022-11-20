@@ -52,7 +52,6 @@ export function SearchMotoboy({ navigation }) {
     try {
       var response = null
 
-      console.log(value)
       if (value === 'A') {
         response = await buscarContratacoesMotoboys()
       } else {
@@ -78,7 +77,6 @@ export function SearchMotoboy({ navigation }) {
         visibilityTime: 6000,
       })
       setRefreshing(false)
-      console.log(error)
     }
   }
 
@@ -196,7 +194,9 @@ export function SearchMotoboy({ navigation }) {
             </Button>
           </Card>
         )}
-        ListEmptyComponent={() => <Text>Nenhum motoboy encontrado!</Text>}
+        ListEmptyComponent={() => (
+          <Text mt="20">Nenhum motoboy encontrado!</Text>
+        )}
         keyExtractor={(item) => item.id}
       />
     </Container>

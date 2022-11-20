@@ -151,7 +151,6 @@ export function RegisterDelivery({ navigation }) {
         }
 
         if (responseContratacao.status === 400) {
-          console.log(response.data)
           Toast.show({
             type: 'info',
             text1: 'Valide seus dados',
@@ -161,7 +160,6 @@ export function RegisterDelivery({ navigation }) {
       }
 
       if (response.status === 400) {
-        console.log(response.data)
         Toast.show({
           type: 'info',
           text1: 'Valide seus dados',
@@ -174,7 +172,6 @@ export function RegisterDelivery({ navigation }) {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 

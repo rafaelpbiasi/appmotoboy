@@ -18,11 +18,11 @@ export function RegisterDeliveryMotoboy({ route, navigation }) {
     RuaOrigem: '',
   })
   const [RuaOrigem, setRuaOrigem] = useState('')
-  const [NumeroOrigem, setNumeroOrigem] = useState(null)
+  const [NumeroOrigem, setNumeroOrigem] = useState('')
   const [BairroOrigem, setBairroOrigem] = useState('')
   const [ReferenciaOrigem, setReferenciaOrigem] = useState('')
   const [RuaDestino, setRuaDestino] = useState('')
-  const [NumeroDestino, setNumeroDestino] = useState(null)
+  const [NumeroDestino, setNumeroDestino] = useState('')
   const [BairroDestino, setBairroDestino] = useState('')
   const [ReferenciaDestino, setReferenciaDestino] = useState('')
   const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
@@ -160,7 +160,6 @@ export function RegisterDeliveryMotoboy({ route, navigation }) {
         }
 
         if (responseContratacao.status === 400) {
-          console.log(response.data)
           Toast.show({
             type: 'info',
             text1: 'Valide seus dados',
@@ -170,7 +169,6 @@ export function RegisterDeliveryMotoboy({ route, navigation }) {
       }
 
       if (response.status === 400) {
-        console.log(response.data)
         Toast.show({
           type: 'info',
           text1: 'Valide seus dados',
@@ -183,7 +181,6 @@ export function RegisterDeliveryMotoboy({ route, navigation }) {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 

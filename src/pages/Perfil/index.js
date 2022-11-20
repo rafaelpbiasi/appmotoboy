@@ -67,7 +67,6 @@ export function Perfil() {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 
@@ -104,7 +103,7 @@ export function Perfil() {
             </Button>
           )}
 
-          <Button onPress={sair} borderColor="green" bg="white" w="40" h="40">
+          <Button onPress={sair} borderColor="green" bg="white" w="50" h="50">
             <Icon name="exit-outline" size={30} color={colors.green} />
           </Button>
         </Row>

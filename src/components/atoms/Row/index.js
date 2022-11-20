@@ -10,7 +10,7 @@ export const Row = styled.View`
   margin-left: ${({ theme, ml }) => theme.metrics.px(ml || 0)}px;
   margin-right: ${({ theme, mr }) => theme.metrics.px(mr || 0)}px;
   flex-direction: row;
-  border-radius: ${({ border }) => border || '0'}px;
+  border-radius: ${({ border }) => border || 0}px;
   background-color: ${({ bg, theme }) => theme.colors[bg || 'transparent']};
 `
 

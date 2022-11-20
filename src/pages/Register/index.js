@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import { ScreenScrollContainer, Row, Text } from '../../components/atoms'
-import { Button, Input, RadioButton } from '../../components/molecules'
+import {
+  Button,
+  Input,
+  RadioButton,
+  TextErrors,
+} from '../../components/molecules'
 import { Validates } from '../../utils/validates'
 import { Camera, Gallery, MEDIA } from '../../utils/media'
 import Toast from 'react-native-toast-message'
@@ -55,6 +60,7 @@ export function Register({ route, navigation }) {
       Senha: '',
       ConfirmaSenha: '',
       Cpf: '',
+      Termos: '',
     }
 
     const validateNome = Validates.ValidateIsEmpty(Nome)
@@ -67,6 +73,7 @@ export function Register({ route, navigation }) {
       Senha,
       ConfirmaSenha
     )
+    const validateTelefone = Validates.ValidateIsEmpty(Telefone)
 
     if (validateNome) {
       setErrors((prevState) => {
@@ -135,6 +142,26 @@ export function Register({ route, navigation }) {
       valid = false
     }
 
+    if (validateTelefone) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          Telefone: validateTelefone,
+        }
+      })
+      valid = false
+    }
+
+    if (!termos) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          Termos: 'Este campo é obrigatório!',
+        }
+      })
+      valid = false
+    }
+
     return valid
   }
 
@@ -150,6 +177,7 @@ export function Register({ route, navigation }) {
   }
 
   function handleNavigateConfirmaTermos() {
+    resetErrors()
     navigation.navigate('ConfirmTerms')
   }
 
@@ -180,7 +208,6 @@ export function Register({ route, navigation }) {
 
       const response = await cadastroUsuario(data)
 
-      console.log(response.data)
       if (response.status === 201) {
         navigation.reset({
           routes: [{ name: 'Login' }],
@@ -188,7 +215,6 @@ export function Register({ route, navigation }) {
       }
 
       if (response.status === 400) {
-        console.log(response.data)
         Toast.show({
           type: 'info',
           text1: 'Valide seus dados',
@@ -201,7 +227,6 @@ export function Register({ route, navigation }) {
         text1: 'Erro inesperado',
         visibilityTime: 6000,
       })
-      console.log(error)
     }
   }
 
@@ -447,6 +472,7 @@ export function Register({ route, navigation }) {
           title=""
           checked={termos}
           setChecked={(isChecked) => {
+            resetErrors()
             setTermos(isChecked)
           }}
           disableBuiltInState={
@@ -458,6 +484,9 @@ export function Register({ route, navigation }) {
             Confirma os termos de uso?
           </Text>
         </GenericButton>
+      </Row>
+      <Row wp="90">
+        <TextErrors mt="5" message={errors.Termos} />
       </Row>
 
       <Button mt="20" wp="48" mb="50" onPress={handleNavigateCadastro}>
