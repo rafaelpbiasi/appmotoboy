@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   ScreenScrollContainer,
   Row,
@@ -6,7 +6,13 @@ import {
   Column,
   Divisor,
 } from '../../components/atoms'
-import { Button, Card, Input, ModalImage } from '../../components/molecules'
+import {
+  Button,
+  Card,
+  Estrelas,
+  Input,
+  ModalImage,
+} from '../../components/molecules'
 import Toast from 'react-native-toast-message'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { colors } from '../../styles/colors'
@@ -20,6 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import { GenericButton } from '../../components/molecules/Button/styles'
 import { Linking } from 'react-native'
+import ModalAvaliacao from '../../components/molecules/ModalAvaliacao'
 
 export function VisualizarPerfil({ route, navigation }) {
   const [abrirModal, setAbrirModal] = useState(false)
@@ -28,6 +35,8 @@ export function VisualizarPerfil({ route, navigation }) {
   const [comentario, setComentario] = useState(null)
   const [avaliacao, setAvaliacao] = useState([])
   const [apresentaComentario, setApresentaComentario] = useState([])
+  const [estrelas, setEstrelas] = useState('0')
+  const [abrirModalAvaliar, setAbrirModalAvaliar] = useState(false)
 
   async function buscar(idUsuario) {
     try {
@@ -77,11 +86,13 @@ export function VisualizarPerfil({ route, navigation }) {
 
   async function inserirComentario() {
     try {
+      setAbrirModalAvaliar(false)
       const usuarioLogado = JSON.parse(await AsyncStorage.getItem('usuario'))
       const dadosValiacao = {
         comentario: comentario,
         codperfilavaliador: usuarioLogado,
         codperfilavaliado: idPerfil,
+        estrela: estrelas,
       }
 
       const response = await cadastroAvaliacao(dadosValiacao)
@@ -122,25 +133,30 @@ export function VisualizarPerfil({ route, navigation }) {
       <Column wp="90" mt="50">
         <Row justify="space-between" wp="90" mt="10">
           <Text weight="bold">{perfil.nome}</Text>
-
-          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
-            <Button
-              onPress={() => {
-                if (perfil?.fotocnh) {
-                  setAbrirModal(true)
-                }
-              }}
-              borderColor="green"
-              bg="white"
-              w="40"
-              h="40"
-            >
-              <Icon name="documents" size={30} color={colors.green} />
-            </Button>
-          )}
         </Row>
 
         <Divisor mt="15" />
+
+        <Row justify="flex-start" mt="20">
+          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' &&
+            perfil.flagverificado === 'T' && (
+              <>
+                <Icon
+                  name="md-shield-checkmark"
+                  size={30}
+                  color={colors.green}
+                />
+                <Text size="20">{' Perfil verificado'}</Text>
+              </>
+            )}
+          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' &&
+            perfil.flagverificado === 'F' && (
+              <>
+                <Icon name="md-shield" size={30} color={colors.green} />
+                <Text size="20">{' Perfil não verificado'}</Text>
+              </>
+            )}
+        </Row>
 
         <Row justify="space-between" mt="20">
           {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
@@ -155,19 +171,20 @@ export function VisualizarPerfil({ route, navigation }) {
           </GenericButton>
         </Row>
 
+        <Row justify="space-between" mt="10">
+          <Estrelas stars={perfil.mediaestrelas} />
+        </Row>
+
         <Divisor mt="15" />
 
-        <Row justify="space-between" style={{ elevation: 10, zIndex: 10 }}>
-          <Input
-            placeholder="Escreva um comentário..."
-            value={comentario}
-            onChangeText={(text) => {
-              setComentario(text)
-            }}
-            returnKeyType="next"
-            onSubmitEditing={inserirComentario}
-          />
-        </Row>
+        <Button
+          mt="20"
+          onPress={() => {
+            setAbrirModalAvaliar(true)
+          }}
+        >
+          Avaliar
+        </Button>
 
         <Row justify="space-between" mt="20">
           <Text size="30" mr="5">
@@ -193,6 +210,34 @@ export function VisualizarPerfil({ route, navigation }) {
         setShow={setAbrirModal}
         image={BASE_URL + perfil.fotocnh}
       />
+
+      <ModalAvaliacao
+        open={abrirModalAvaliar}
+        setOpen={setAbrirModalAvaliar}
+        handleSubmit={inserirComentario}
+      >
+        <Input
+          placeholder="Escreva um comentário..."
+          value={comentario}
+          onChangeText={(text) => {
+            setComentario(text)
+          }}
+          returnKeyType="next"
+        />
+
+        <Text size="18">Qtd. Estrelas</Text>
+        <Input
+          wp="10"
+          keyboardType="number-pad"
+          maxLength={1}
+          value={estrelas}
+          onChangeText={(text) => {
+            setEstrelas(text)
+          }}
+          returnKeyType="next"
+          onSubmitEditing={inserirComentario}
+        />
+      </ModalAvaliacao>
     </ScreenScrollContainer>
   )
 }

@@ -60,6 +60,8 @@ export default class ModalAsync extends React.Component {
             <Row wp="90" mt="20" mb="40" justify="space-between">
               <Button
                 wp="45"
+                borderColor="red"
+                bg="red"
                 onPress={() => {
                   reject()
                   this.hide()
@@ -68,8 +70,6 @@ export default class ModalAsync extends React.Component {
                 Não
               </Button>
               <Button
-                borderColor="red"
-                bg="red"
                 wp="45"
                 onPress={() => {
                   resolve()

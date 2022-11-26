@@ -11,7 +11,6 @@ export function RegisterDelivery({ navigation }) {
   const veiculos = {
     MOTO: 'M',
     CARRO: 'C',
-    AMBOS: 'A',
   }
 
   const [errors, setErrors] = useState({
@@ -20,14 +19,14 @@ export function RegisterDelivery({ navigation }) {
   const [RuaOrigem, setRuaOrigem] = useState('')
   const [NumeroOrigem, setNumeroOrigem] = useState(null)
   const [BairroOrigem, setBairroOrigem] = useState('')
-  const [ReferenciaOrigem, setReferenciaOrigem] = useState('')
   const [RuaDestino, setRuaDestino] = useState('')
   const [NumeroDestino, setNumeroDestino] = useState(null)
   const [BairroDestino, setBairroDestino] = useState('')
-  const [ReferenciaDestino, setReferenciaDestino] = useState('')
-  const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
+  const [Cidade, setCidade] = useState('')
+  const [Estado, setEstado] = useState('')
   const [Valor, setValor] = useState(null)
   const [Item, setItem] = useState('')
+  const [Observacao, setObservacao] = useState('')
 
   function validate() {
     var valid = true
@@ -116,16 +115,14 @@ export function RegisterDelivery({ navigation }) {
         ruaorigem: RuaOrigem,
         numeroorigem: NumeroOrigem,
         bairroorigem: BairroOrigem,
-        referenciaorigem: ReferenciaOrigem,
         ruadestino: RuaDestino,
         numerodestino: NumeroDestino,
         bairrodestino: BairroDestino,
-        referenciadestino: ReferenciaDestino,
         valor: Number(String(Valor).replace(',', '.')),
-        flagtipoveiculo: tipoVeiculo,
         item: Item,
-        cidade: 'Dois Vizinhos',
-        estado: 'Parana',
+        cidade: Cidade,
+        estado: Estado,
+        observacao: Observacao,
       }
 
       const response = await cadastroEntrega(dadosEntrega)
@@ -222,16 +219,6 @@ export function RegisterDelivery({ navigation }) {
         messageError={errors.BairroOrigem}
         returnKeyType={'go'}
       />
-      <Input
-        label="Referência Origem"
-        value={ReferenciaOrigem}
-        onChangeText={(text) => {
-          resetErrors()
-          setReferenciaOrigem(text)
-        }}
-        messageError={errors.ReferenciaOrigem}
-        returnKeyType={'go'}
-      />
       <Row wp="90" justify="space-between">
         <Input
           label="Rua Destino"
@@ -270,45 +257,25 @@ export function RegisterDelivery({ navigation }) {
         returnKeyType={'go'}
       />
       <Input
-        label="Referência Destino"
-        value={ReferenciaDestino}
+        label="Cidade"
+        value={Cidade}
         onChangeText={(text) => {
           resetErrors()
-          setReferenciaDestino(text)
+          setCidade(text)
         }}
-        messageError={errors.ReferenciaDestino}
+        messageError={errors.Cidade}
         returnKeyType={'go'}
       />
-      <>
-        <Row wp="90" mt="10" mb="10">
-          <Row wp="30">
-            <RadioButton
-              checked={tipoVeiculo === veiculos.MOTO}
-              setChecked={() => {
-                setTipoVeiculo(veiculos.MOTO)
-              }}
-              title="Moto"
-            />
-          </Row>
-          <Row wp="40">
-            <RadioButton
-              checked={tipoVeiculo === veiculos.CARRO}
-              setChecked={() => {
-                setTipoVeiculo(veiculos.CARRO)
-              }}
-              ml={24}
-              title="Carro"
-            />
-          </Row>
-          <RadioButton
-            checked={tipoVeiculo === veiculos.AMBOS}
-            setChecked={() => {
-              setTipoVeiculo(veiculos.AMBOS)
-            }}
-            title="Ambos"
-          />
-        </Row>
-      </>
+      <Input
+        label="Estado"
+        value={Estado}
+        onChangeText={(text) => {
+          resetErrors()
+          setEstado(text)
+        }}
+        messageError={errors.Estado}
+        returnKeyType={'go'}
+      />
       <Input
         label="Valor"
         keyboardType="numeric"
@@ -329,6 +296,17 @@ export function RegisterDelivery({ navigation }) {
           setItem(text)
         }}
         messageError={errors.Item}
+        returnKeyType={'go'}
+      />
+
+      <Input
+        label="Observação"
+        value={Observacao}
+        onChangeText={(text) => {
+          resetErrors()
+          setObservacao(text)
+        }}
+        messageError={errors.Observacao}
         returnKeyType={'go'}
       />
 

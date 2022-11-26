@@ -11,6 +11,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "notification": {
+      "icon": "./assets/notification.png",
+      "color": "#F29102",
+      "iosDisplayInForeground": false,
+      "androidMode": "collapse",
+      "androidCollapsedTitle": "Toque para visualizar as atualizações"
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },

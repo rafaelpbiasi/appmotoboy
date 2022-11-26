@@ -6,7 +6,13 @@ import {
   Column,
   Divisor,
 } from '../../components/atoms'
-import { Button, Card, Input, ModalImage } from '../../components/molecules'
+import {
+  Button,
+  Card,
+  Estrelas,
+  Input,
+  ModalImage,
+} from '../../components/molecules'
 import Toast from 'react-native-toast-message'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { colors } from '../../styles/colors'
@@ -87,21 +93,6 @@ export function Perfil() {
       <Column wp="90" mt="50">
         <Row justify="space-between" wp="90" mt="10">
           <Text weight="bold">{perfil.nome}</Text>
-          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
-            <Button
-              onPress={() => {
-                if (perfil?.fotocnh) {
-                  setAbrirModal(true)
-                }
-              }}
-              borderColor="green"
-              bg="white"
-              w="40"
-              h="40"
-            >
-              <Icon name="documents" size={30} color={colors.green} />
-            </Button>
-          )}
 
           <Button onPress={sair} borderColor="green" bg="white" w="50" h="50">
             <Icon name="exit-outline" size={30} color={colors.green} />
@@ -110,7 +101,28 @@ export function Perfil() {
 
         <Divisor mt="15" />
 
-        <Row justify="space-between" mt="20">
+        <Row justify="flex-start" mt="20">
+          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' &&
+            perfil.flagverificado === 'T' && (
+              <>
+                <Icon
+                  name="md-shield-checkmark"
+                  size={30}
+                  color={colors.green}
+                />
+                <Text size="20">{' Perfil verificado'}</Text>
+              </>
+            )}
+          {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' &&
+            perfil.flagverificado === 'F' && (
+              <>
+                <Icon name="md-shield" size={30} color={colors.green} />
+                <Text size="20">{' Perfil não verificado'}</Text>
+              </>
+            )}
+        </Row>
+
+        <Row justify="space-between" mt="10">
           {String(perfil.flagtipousuario).toLocaleUpperCase() === 'M' && (
             <Text size="20">{'Qtde entregas: ' + perfil.qtdEntrega}</Text>
           )}
@@ -125,6 +137,10 @@ export function Perfil() {
           <Text size="20" mr="5">
             {'Telefone: ' + perfil.telefone}
           </Text>
+        </Row>
+
+        <Row justify="space-between" mt="10">
+          <Estrelas stars={perfil.mediaestrelas} />
         </Row>
 
         <Divisor mt="15" />

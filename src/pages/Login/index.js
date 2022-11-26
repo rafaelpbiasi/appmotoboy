@@ -13,6 +13,7 @@ import { login } from '../../services/usuario'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import AuthContext from '../../contexts/auth'
+import { RecuperarTokenNotificacao } from '../../utils/notificacao'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -81,6 +82,7 @@ export function Login() {
       const dadosLogin = {
         email: email,
         senha: password,
+        uuid: await RecuperarTokenNotificacao(),
       }
       const response = await signIn(dadosLogin)
 
@@ -92,6 +94,7 @@ export function Login() {
         })
       }
     } catch (error) {
+      console.log(error)
       Toast.show({
         type: 'error',
         text1: 'Erro inesperado',

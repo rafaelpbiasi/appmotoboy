@@ -12,7 +12,7 @@ import Toast from 'react-native-toast-message'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   buscarContratacoesMotoboys,
-  buscarContratacoesMotoboysVeiculo,
+  buscarContratacoesMotoboysVerificado,
 } from '../../services/usuario'
 import { FlatList, RefreshControl } from 'react-native'
 
@@ -22,13 +22,12 @@ export function SearchMotoboy({ navigation }) {
   const [errors, setErrors] = useState({
     Nome: '',
   })
-
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('A')
+  const [value, setValue] = useState('Z')
   const [items, setItems] = useState([
-    { label: 'Ambos', value: 'A' },
-    { label: 'Carro', value: 'C' },
-    { label: 'Moto', value: 'M' },
+    { label: 'Todos', value: 'Z' },
+    { label: 'Verificado', value: 'T' },
+    { label: 'Não verificado', value: 'F' },
   ])
 
   function validate() {
@@ -52,10 +51,10 @@ export function SearchMotoboy({ navigation }) {
     try {
       var response = null
 
-      if (value === 'A') {
+      if (value === 'Z') {
         response = await buscarContratacoesMotoboys()
       } else {
-        response = await buscarContratacoesMotoboysVeiculo(value)
+        response = await buscarContratacoesMotoboysVerificado(value)
       }
 
       if (response.status === 200) {
@@ -84,20 +83,6 @@ export function SearchMotoboy({ navigation }) {
     buscar()
   }, [value])
 
-  function buscaDescrVeiculo(veiculo) {
-    var descriVeiculo = ''
-
-    if (veiculo === 'M') {
-      descriVeiculo = 'Moto'
-    } else if (veiculo === 'C') {
-      descriVeiculo = 'Carro'
-    } else {
-      descriVeiculo = 'Ambos'
-    }
-
-    return descriVeiculo
-  }
-
   return (
     <Container align="center">
       <Text mt="80" size="35" weight="bold">
@@ -111,7 +96,7 @@ export function SearchMotoboy({ navigation }) {
         style={{ elevation: 10, zIndex: 10 }}
       >
         <Text size="20" mr="5">
-          Veículo:
+          Perfil verificado
         </Text>
         <DropDownPicker
           //Aqui da o erro, porque está abrindo um scrollView dentro do outro
@@ -122,7 +107,7 @@ export function SearchMotoboy({ navigation }) {
             color: colors.greenDark,
           }}
           containerStyle={{
-            width: '80%',
+            width: '60%',
           }}
           open={open}
           value={value}
@@ -162,15 +147,6 @@ export function SearchMotoboy({ navigation }) {
               >
                 Perfil
               </Button>
-            </Row>
-            <Row
-              justify="space-between"
-              mt="10"
-              style={{ elevation: 10, zIndex: 10 }}
-            >
-              <Text size="20" mr="5">
-                {'Veículo: ' + buscaDescrVeiculo(item.flagtipoveiculo)}
-              </Text>
             </Row>
 
             <Row

@@ -20,12 +20,6 @@ const tipos = {
   CONTRANTE: 'C',
 }
 
-const veiculos = {
-  MOTO: 'M',
-  CARRO: 'C',
-  AMBOS: 'A',
-}
-
 export function Register({ route, navigation }) {
   const [Nome, setNome] = useState('')
   const [Telefone, setTelefone] = useState('')
@@ -37,7 +31,6 @@ export function Register({ route, navigation }) {
     Nome: '',
   })
   const [tipoUsuario, setTipoUsuario] = useState(tipos.MOTOBOY)
-  const [tipoVeiculo, setTipoVeiculo] = useState(veiculos.MOTO)
   const [termos, setTermos] = useState(false)
   const [image, setImage] = useState(null)
   const [Rua, setRua] = useState('')
@@ -193,7 +186,6 @@ export function Register({ route, navigation }) {
       data.append('senha', Senha)
       data.append('cpfcnpj', Cpf)
       data.append('flagtipousuario', tipoUsuario)
-      data.append('flagtipoveiculo', tipoVeiculo)
       data.append('rua', Rua)
       data.append('numero', Numero)
       data.append('cep', Cep)
@@ -205,6 +197,9 @@ export function Register({ route, navigation }) {
           uri: image,
         })
       }
+      data.append('flagverificado', 'F')
+      data.append('mediaestrelas', 0)
+      data.append('uuid', '')
 
       const response = await cadastroUsuario(data)
 
@@ -273,34 +268,6 @@ export function Register({ route, navigation }) {
     if (tipoUsuario === tipos.MOTOBOY) {
       return (
         <>
-          <Row wp="90" mt="10">
-            <Row wp="30">
-              <RadioButton
-                checked={tipoVeiculo === veiculos.MOTO}
-                setChecked={() => {
-                  setTipoVeiculo(veiculos.MOTO)
-                }}
-                title="Moto"
-              />
-            </Row>
-            <Row wp="40">
-              <RadioButton
-                checked={tipoVeiculo === veiculos.CARRO}
-                setChecked={() => {
-                  setTipoVeiculo(veiculos.CARRO)
-                }}
-                ml={24}
-                title="Carro"
-              />
-            </Row>
-            <RadioButton
-              checked={tipoVeiculo === veiculos.AMBOS}
-              setChecked={() => {
-                setTipoVeiculo(veiculos.AMBOS)
-              }}
-              title="Ambos"
-            />
-          </Row>
           <Text mt="20">Upload foto CNH</Text>
           <Row wp="90" mt="15" justify="space-between">
             <Button

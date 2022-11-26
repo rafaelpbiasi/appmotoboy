@@ -243,9 +243,7 @@ export function YourDelivery({ navigation }) {
                   ', bairro: ' +
                   item?.entrega?.bairroorigem +
                   ', N° ' +
-                  item?.entrega?.numeroorigem +
-                  ', Referência: ' +
-                  item?.entrega?.referenciaorigem}
+                  item?.entrega?.numeroorigem}
               </Text>
             </Row>
             <Row
@@ -259,11 +257,21 @@ export function YourDelivery({ navigation }) {
                   ', bairro: ' +
                   item?.entrega?.bairrodestino +
                   ', N°: ' +
-                  item?.entrega?.numerodestino +
-                  ', Referência: ' +
-                  item?.entrega?.referenciadestino}
+                  item?.entrega?.numerodestino}
               </Text>
             </Row>
+
+            {!!item.entrega.observacao && (
+              <Row
+                justify="space-between"
+                mt="10"
+                style={{ elevation: 10, zIndex: 10 }}
+              >
+                <Text size="20" mr="5" align="left">
+                  {'Observação: ' + item.entrega.observacao}
+                </Text>
+              </Row>
+            )}
 
             <Row
               justify="space-between"

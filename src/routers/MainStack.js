@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useEffect, useRef, useState } from 'react'
 import {
   Home,
   RegisterDelivery,
@@ -14,8 +15,44 @@ import {
 } from '../pages'
 import MainTabBottom from './MainTabBottom'
 import MainTabBottomMotoboy from './MainTabBottomMotoboy'
+import * as Notifications from 'expo-notifications'
+import { ConverteNotificacao } from '../utils/utils'
+import { useNavigation } from '@react-navigation/native'
 
 export function MainRoutes({ telaInicial }) {
+  const [notifications, setNotifications] = useState(null)
+  const [count, setCount] = useState(0)
+  const navigate = useNavigation()
+
+  const _isMounted = useRef(true)
+
+  useEffect(() => {
+    if (_isMounted) {
+      Notifications.addNotificationResponseReceivedListener((e) =>
+        setNotifications(e)
+      )
+    }
+
+    return () => {
+      _isMounted.current = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (notifications && count === 0) {
+      const data = notifications.notification.request.content.data || null
+      setCount(1)
+      if (data && data.tela) {
+        const page = ConverteNotificacao(data)
+        navigate.navigate(page.name, page.options)
+      }
+    }
+    return () => {
+      setCount(0)
+      _isMounted.current = false
+    }
+  }, [notifications])
+
   const Stack = createNativeStackNavigator()
   return (
     <Stack.Navigator

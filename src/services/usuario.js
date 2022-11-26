@@ -27,3 +27,7 @@ export function avaliacaoUsuarioLogado(idUsuario) {
 export function relatorioUsuarioLogado(idUsuario) {
   return api.get(`/usuario/relatorio/${idUsuario}`)
 }
+
+export function buscarContratacoesMotoboysVerificado(verificado) {
+  return api.get(`/usuario/motoboys/verificado/${verificado}`)
+}

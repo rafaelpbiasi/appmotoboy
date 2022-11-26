@@ -6,9 +6,18 @@ import { theme } from './src/styles'
 import Toast from 'react-native-toast-message'
 import { AuthProvider } from './src/contexts/auth'
 import { LogBox } from 'react-native'
+import * as Notifications from 'expo-notifications'
 
 export default function App() {
   LogBox.ignoreAllLogs()
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  })
+
   return (
     <NavigationContainer>
       <ThemeProvider theme={theme}>
